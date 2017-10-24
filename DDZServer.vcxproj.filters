@@ -1,2 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="DDZServer.cpp" />
+    <ClCompile Include="thread\ThreadLibFunctions.cpp" />
+    <ClCompile Include="socket\SocketLibErrors.cpp" />
+    <ClCompile Include="socket\SocketSet.cpp" />
+    <ClCompile Include="socket\SocketLibSocket.cpp" />
+    <ClCompile Include="socket\SocketLibSystem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="thread\ThreadException.h" />
+    <ClInclude Include="thread\ThreadLib.h" />
+    <ClInclude Include="thread\ThreadLibFunctions.h" />
+    <ClInclude Include="thread\ThreadLibMutex.h" />
+    <ClInclude Include="socket\SocketLib.h" />
+    <ClInclude Include="socket\SocketLibTypes.h" />
+    <ClInclude Include="socket\SocketLibErrors.h" />
+    <ClInclude Include="socket\SocketSet.h" />
+    <ClInclude Include="socket\SocketLibSocket.h" />
+    <ClInclude Include="socket\SocketLibSystem.h" />
+    <ClInclude Include="socket\Connection.h" />
+    <ClInclude Include="socket\ConnectionManager.h" />
+    <ClInclude Include="socket\ListeningManager.h" />
+  </ItemGroup>
+</Project>
