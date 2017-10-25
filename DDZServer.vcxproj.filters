@@ -7,6 +7,8 @@
     <ClCompile Include="socket\SocketSet.cpp" />
     <ClCompile Include="socket\SocketLibSocket.cpp" />
     <ClCompile Include="socket\SocketLibSystem.cpp" />
+    <ClCompile Include="basic\GameLog.cpp" />
+    <ClCompile Include="basic\ConfigMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thread\ThreadException.h" />
@@ -22,5 +24,10 @@
     <ClInclude Include="socket\Connection.h" />
     <ClInclude Include="socket\ConnectionManager.h" />
     <ClInclude Include="socket\ListeningManager.h" />
+    <ClInclude Include="basic\GameLog.h" />
+    <ClInclude Include="basic\FileUtil.h" />
+    <ClInclude Include="basic\ConfigMgr.h" />
+    <ClInclude Include="basic\basic.h" />
+    <ClInclude Include="basic\Exception.h" />
   </ItemGroup>
 </Project>

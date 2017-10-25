@@ -27,7 +27,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -74,18 +74,25 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>G:\zhu\DDZServer\basic;G:\zhu\DDZServer\include\mysql-connector;G:\zhu\DDZServer\include;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>G:\zhu\DDZServer\lib\mysql-connector;G:\zhu\DDZServer\lib\libprotobuf\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>G:\zhu\DDZServer\include\spdlog;G:\zhu\DDZServer\include\mysql-connector\cppconn;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>G:\zhu\DDZServer\include;G:\zhu\DDZServer\basic;G:\zhu\DDZServer\include\mysql-connector;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>G:\zhu\DDZServer\lib\mysql-connector;G:\zhu\DDZServer\lib\libprotobuf;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -115,7 +122,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="basic\ConfigMgr.cpp" />
     <ClCompile Include="DDZServer.cpp" />
+    <ClCompile Include="basic\GameLog.cpp" />
     <ClCompile Include="socket\SocketLibErrors.cpp" />
     <ClCompile Include="socket\SocketLibSocket.cpp" />
     <ClCompile Include="socket\SocketLibSystem.cpp" />
@@ -123,6 +132,11 @@
     <ClCompile Include="thread\ThreadLibFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basic\basic.h" />
+    <ClInclude Include="basic\Exception.h" />
+    <ClInclude Include="basic\FileUtil.h" />
+    <ClInclude Include="basic\GameLog.h" />
+    <ClInclude Include="basic\ConfigMgr.h" />
     <ClInclude Include="socket\Connection.h" />
     <ClInclude Include="socket\ConnectionManager.h" />
     <ClInclude Include="socket\ListeningManager.h" />

@@ -8,8 +8,6 @@
 #ifndef SOCKETSET_H
 #define SOCKETSET_H
 
-
-#include "../basiclib/BasicLib.h"
 #include "SocketLibTypes.h"
 #include "SocketLibSocket.h"
 #include <set>

@@ -13,7 +13,7 @@
 #include "SocketLibErrors.h"
 #include "SocketSet.h"
 #include "Connection.h"
-#include "../basic/GameLog.h"
+#include <GameLog.h>
 
 namespace SocketLib
 {
