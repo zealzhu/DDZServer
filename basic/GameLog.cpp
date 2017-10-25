@@ -1,7 +1,7 @@
 #include "GameLog.h"
-#include <FileUtil.h>
+#include "FileUtil.h"
 #include <vector>
-#include <ConfigMgr.h>
+#include "ConfigMgr.h"
 #include <iostream>
 
 std::unique_ptr<CGameLog> logger;

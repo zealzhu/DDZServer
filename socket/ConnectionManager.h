@@ -13,7 +13,7 @@
 #include "SocketLibErrors.h"
 #include "SocketSet.h"
 #include "Connection.h"
-#include <GameLog.h>
+#include "../basic/GameLog.h"
 
 namespace SocketLib
 {
@@ -47,11 +47,6 @@ class ConnectionManager
 	typedef typename std::list< std::shared_ptr<IConnectionEvent> >::iterator listennerlistitr;
 
 public:
-	//static ListeningManager& Instance()
-	//{
-	//	static ListeningManager instance;
-	//	return instance;
-	//}
 
     // ------------------------------------------------------------------------
 	//  通过最大传输速率、传输大小和发送时长来创建一个连接管理器

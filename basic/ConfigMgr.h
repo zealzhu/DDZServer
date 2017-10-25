@@ -7,7 +7,7 @@
 #ifndef _CONFIG_MGR_H
 #define _CONFIG_MGR_H
 
-#include <FileUtil.h>
+#include "FileUtil.h"
 
 namespace basic
 {

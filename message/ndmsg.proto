@@ -1,0 +1,21 @@
+syntax = "proto2";
+
+package nd;
+
+message SelfDescribingMessage {
+	// 消息类型名称，必需为英文
+	required bytes type_name = 1;
+
+	// 目的socket值，用于服务器分发数据时使用
+	repeated int32 socket = 2;
+
+	// 实际消息数据
+	required bytes message_data = 3;
+}
+
+message ErrorMessage {
+	// 错误码
+	optional int32 id = 1[default = -1];
+	// 错误描述
+	optional bytes desc = 2;
+}

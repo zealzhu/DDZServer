@@ -27,7 +27,7 @@
 #include "ThreadException.h"
 #include <thread>
 #include <chrono>
-#include <GameLog.h>
+#include "../basic/GameLog.h"
 namespace ThreadLib
 {
 

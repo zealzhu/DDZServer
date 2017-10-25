@@ -7,7 +7,7 @@
 
 #include "SocketLibSocket.h"
 #include "SocketLibSystem.h"
-#include <basic.h>
+#include "../basic/basic.h"
 
 namespace SocketLib
 {

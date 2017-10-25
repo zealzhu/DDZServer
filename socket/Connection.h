@@ -15,6 +15,7 @@
 #include "SocketLibTypes.h"
 #include "ConnectionManager.h"
 #include "SocketLibSocket.h"
+#include "../basiclib/BasicLib.h"
 
 namespace SocketLib
 {
@@ -128,7 +129,7 @@ public:
 protected:
 
 
-    // This is the protocol object that will manage data when it is received.
+    // 接受到的协议对象
     protocol m_protocol;
 
     // This buffer stores all the data to be sent at a later time.

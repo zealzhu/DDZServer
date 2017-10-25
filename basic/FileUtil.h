@@ -7,7 +7,7 @@
 #ifndef _FILE_UTIL_H
 #define _FILE_UTIL_H
 
-#include <inih/cpp/INIReader.h>
+#include "inih/cpp/INIReader.h"
 #include <direct.h>
 #include <iostream>
 #include <sys/stat.h>

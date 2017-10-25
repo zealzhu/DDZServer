@@ -86,7 +86,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>G:\zhu\DDZServer\include;G:\zhu\DDZServer\basic;G:\zhu\DDZServer\include\mysql-connector;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>G:\zhu\DDZServer\include;G:\zhu\DDZServer\include\mysql-connector;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -125,6 +125,7 @@
     <ClCompile Include="basic\ConfigMgr.cpp" />
     <ClCompile Include="DDZServer.cpp" />
     <ClCompile Include="basic\GameLog.cpp" />
+    <ClCompile Include="message\MsgMgr.cpp" />
     <ClCompile Include="socket\SocketLibErrors.cpp" />
     <ClCompile Include="socket\SocketLibSocket.cpp" />
     <ClCompile Include="socket\SocketLibSystem.cpp" />
@@ -137,6 +138,7 @@
     <ClInclude Include="basic\FileUtil.h" />
     <ClInclude Include="basic\GameLog.h" />
     <ClInclude Include="basic\ConfigMgr.h" />
+    <ClInclude Include="message\MsgMgr.h" />
     <ClInclude Include="socket\Connection.h" />
     <ClInclude Include="socket\ConnectionManager.h" />
     <ClInclude Include="socket\ListeningManager.h" />
