@@ -1,7 +1,7 @@
 ﻿////////////////////////////////////////////////////////////////////////
 // Copyright(c) 1999-2099, TQ Digital Entertainment, All Rights Reserved
 // Author：  zhu
-// Created： 2017/07/10
+// Created： 2017/10/25
 // Describe：Protobuf协议类
 ////////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@
 
 #include <string>
 #include "../socket/SocketLib.h"
-#include "../message/ndmsg.pb.h"
+#include "../message/BaseMsg.pb.h"
 #include <google/protobuf/message.h>
 
 
@@ -69,7 +69,7 @@ public:
 	static MessagePtr Decode(int csock, google::protobuf::uint32 iSize);
 
 	// 解析Message成真正有用的数据包
-	static MessagePtr parseInnerMsg(std::shared_ptr<nd::SelfDescribingMessage> pOutterMsg, ErrorCode& error);
+	static MessagePtr parseInnerMsg(std::shared_ptr<zhu::SelfDescribingMessage> pOutterMsg, ErrorCode& error);
 
 	// 读取报头（报文大小字段）
 	static unsigned int ReadHdr(char* pBuf);

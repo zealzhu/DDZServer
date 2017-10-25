@@ -1,6 +1,6 @@
 syntax = "proto2";
 
-package nd;
+package zhu;
 
 message SelfDescribingMessage {
 	// 消息类型名称，必需为英文
