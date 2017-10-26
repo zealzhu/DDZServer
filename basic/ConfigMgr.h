@@ -16,17 +16,17 @@ namespace basic
 	public:
 		// 获取配置参数
 		static std::string getConfigParam(const std::string & strKey, const std::string & strDefaultValue) {
-			//map<std::string, std::string>::iterator itResult = m_mapConfig.find(strKey);
+			map<std::string, std::string>::iterator itResult = m_mapConfig.find(strKey);
 
-			//if (m_mapConfig.end() != itResult)
-			//	return itResult->second;
-			//else
+			if (m_mapConfig.end() != itResult)
+				return itResult->second;
+			else
 				return strDefaultValue;
 		}
 
 	private:
 		// 配置表
-		//static map<std::string, std::string> m_mapConfig;
+		static map<std::string, std::string> m_mapConfig;
 	};
 }
 

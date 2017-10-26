@@ -75,10 +75,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>G:\zhu\DDZServer\basic;G:\zhu\DDZServer\include\mysql-connector;G:\zhu\DDZServer\include;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>G:\zhu\DDZServer\lib\mysql-connector;G:\zhu\DDZServer\lib\libprotobuf\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -91,7 +93,7 @@
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>G:\zhu\DDZServer\lib\mysql-connector;G:\zhu\DDZServer\lib\libprotobuf;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libprotobufd.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -123,9 +125,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="basic\ConfigMgr.cpp" />
+    <ClCompile Include="basic\inih\cpp\INIReader.cpp" />
+    <ClCompile Include="basic\inih\ini.c" />
     <ClCompile Include="DDZServer.cpp" />
     <ClCompile Include="basic\GameLog.cpp" />
+    <ClCompile Include="message\BaseMsg.pb.cc" />
     <ClCompile Include="message\MsgMgr.cpp" />
+    <ClCompile Include="protocol\Protobuf.cpp" />
     <ClCompile Include="socket\SocketLibErrors.cpp" />
     <ClCompile Include="socket\SocketLibSocket.cpp" />
     <ClCompile Include="socket\SocketLibSystem.cpp" />
@@ -138,7 +144,11 @@
     <ClInclude Include="basic\FileUtil.h" />
     <ClInclude Include="basic\GameLog.h" />
     <ClInclude Include="basic\ConfigMgr.h" />
+    <ClInclude Include="basic\inih\cpp\INIReader.h" />
+    <ClInclude Include="basic\inih\ini.h" />
+    <ClInclude Include="message\BaseMsg.pb.h" />
     <ClInclude Include="message\MsgMgr.h" />
+    <ClInclude Include="protocol\Protobuf.h" />
     <ClInclude Include="socket\Connection.h" />
     <ClInclude Include="socket\ConnectionManager.h" />
     <ClInclude Include="socket\ListeningManager.h" />

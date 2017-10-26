@@ -1,11 +1,11 @@
 ﻿////////////////////////////////////////////////////////////////////////
 // Copyright(c) 1999-2099, TQ Digital Entertainment, All Rights Reserved
-// Author：  zhou du
-// Created： 2017/07/10
+// Author：  zhu
+// Created： 2017/10/26
 // Describe：Protobuf协议类
 ////////////////////////////////////////////////////////////////////////
 
-#include "../utils/StringUtils.h"
+//#include "../utils/StringUtils.h"
 #include "Protobuf.h"
 #include "../message/MsgMgr.h"
 
@@ -15,7 +15,6 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
-#include <google/protobuf/descriptor.h>
 
 #include "../socket/SocketLibErrors.h"
 #include "../basic/basic.h"
@@ -26,7 +25,7 @@ using namespace google::protobuf;
 using namespace google::protobuf::io;
 using namespace SocketLib;
 
-namespace nd
+namespace zhu
 {
 	const std::string STR_SUCCESS = "Success";
 	const std::string STR_INVALID_NAME_LEN = "InvalidNameLen";
@@ -44,7 +43,7 @@ void CProtobuf::Translate( connection& conn, char* pBuffer, int iSize )
 	MessagePtr messagePtr = CProtobuf::Decode(conn.GetSock(), CProtobuf::ReadHdr(pBuffer));
 
 	// 插入消息队列
-	nd::CMsgMgr::Instance().InsertReceivedMsg(messagePtr);
+	zhu::CMsgMgr::getInstance().insertReceivedMsg(messagePtr);
 }
 
 
@@ -132,7 +131,7 @@ unsigned int CProtobuf::ReadHdr(char *pBuf)
 MessagePtr CProtobuf::Decode(int csock, google::protobuf::uint32 iSize)
 {
 	unsigned uiByteCount = 0;
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	char* pBuffer = NEW_ND char[iSize];//size of the payload and hdr
 	ZeroMemory(pBuffer, iSize);
 	//Read the entire buffer including the hdr
@@ -161,7 +160,7 @@ MessagePtr CProtobuf::Decode(int csock, google::protobuf::uint32 iSize)
 	return pPayload;
 }
 
-MessagePtr CProtobuf::parseInnerMsg(std::shared_ptr<nd::SelfDescribingMessage> pOutterMsg, ErrorCode& error)
+MessagePtr CProtobuf::parseInnerMsg(std::shared_ptr<zhu::SelfDescribingMessage> pOutterMsg, ErrorCode& error)
 {
 	MessagePtr pMessage(CProtobuf::CreateMessage(pOutterMsg->type_name()));
 	if (pMessage)

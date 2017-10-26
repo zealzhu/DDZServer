@@ -113,7 +113,7 @@ void zhu::CMsgMgr::insertReceivedMsg(MSG_PTR pMsg)
 zhu::MSG_PTR zhu::CMsgMgr::getReceivedMsg()
 {
 	// 没有消息则等待
-	WaitForSingleObject(m_hSendDeqFullSemphore, INFINITE);
+	WaitForSingleObject(m_hRecDeqFullSemaphore, INFINITE);
 	MSG_PTR msg = NULL;
 
 	m_csReceive.Lock();
@@ -126,7 +126,7 @@ zhu::MSG_PTR zhu::CMsgMgr::getReceivedMsg()
 	m_csReceive.Unlock();
 
 	// 空信号量+1
-	ReleaseSemaphore(m_hSendDeqEmptySemphore, 1, NULL);
+	ReleaseSemaphore(m_hRecDeqEmptySemphore, 1, NULL);
 
 	return msg;
 }

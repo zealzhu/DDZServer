@@ -10,6 +10,10 @@
     <ClCompile Include="basic\GameLog.cpp" />
     <ClCompile Include="basic\ConfigMgr.cpp" />
     <ClCompile Include="message\MsgMgr.cpp" />
+    <ClCompile Include="protocol\Protobuf.cpp" />
+    <ClCompile Include="message\BaseMsg.pb.cc" />
+    <ClCompile Include="basic\inih\cpp\INIReader.cpp" />
+    <ClCompile Include="basic\inih\ini.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thread\ThreadException.h" />
@@ -31,5 +35,9 @@
     <ClInclude Include="basic\basic.h" />
     <ClInclude Include="basic\Exception.h" />
     <ClInclude Include="message\MsgMgr.h" />
+    <ClInclude Include="protocol\Protobuf.h" />
+    <ClInclude Include="message\BaseMsg.pb.h" />
+    <ClInclude Include="basic\inih\cpp\INIReader.h" />
+    <ClInclude Include="basic\inih\ini.h" />
   </ItemGroup>
 </Project>

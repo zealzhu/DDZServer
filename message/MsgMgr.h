@@ -64,8 +64,8 @@ namespace zhu
 		MSG_DEQUE			 m_receiveDeq;			  // 接收消息队列
 		MSG_DEQUE			 m_sendDeq;				  // 发送消息队列
 
-		Mutex				 m_csReceive;			  // 接收临界区
-		Mutex				 m_csSend;				  // 发送临界区
+		ThreadLib::Mutex	 m_csReceive;			  // 接收临界区
+		ThreadLib::Mutex	 m_csSend;				  // 发送临界区
 
 #ifdef WIN32
 		HANDLE               m_hRecDeqFullSemaphore;  // 消息接受队列满信号量
