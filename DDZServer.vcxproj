@@ -75,7 +75,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>G:\zhu\DDZServer\basic;G:\zhu\DDZServer\include\mysql-connector;G:\zhu\DDZServer\include;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -124,6 +124,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="basiclib\BasicLibRandom.cpp" />
+    <ClCompile Include="basiclib\BasicLibString.cpp" />
+    <ClCompile Include="basiclib\BasicLibTime.cpp" />
     <ClCompile Include="basic\ConfigMgr.cpp" />
     <ClCompile Include="basic\inih\cpp\INIReader.cpp" />
     <ClCompile Include="basic\inih\ini.c" />
@@ -139,6 +142,12 @@
     <ClCompile Include="thread\ThreadLibFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="basiclib\BasicLib.h" />
+    <ClInclude Include="basiclib\BasicLibFunctions.h" />
+    <ClInclude Include="basiclib\BasicLibRandom.h" />
+    <ClInclude Include="basiclib\BasicLibString.h" />
+    <ClInclude Include="basiclib\BasicLibTime.h" />
+    <ClInclude Include="basiclib\BasicLibTypes.h" />
     <ClInclude Include="basic\basic.h" />
     <ClInclude Include="basic\Exception.h" />
     <ClInclude Include="basic\FileUtil.h" />

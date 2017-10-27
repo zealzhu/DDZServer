@@ -14,6 +14,9 @@
     <ClCompile Include="message\BaseMsg.pb.cc" />
     <ClCompile Include="basic\inih\cpp\INIReader.cpp" />
     <ClCompile Include="basic\inih\ini.c" />
+    <ClCompile Include="basiclib\BasicLibRandom.cpp" />
+    <ClCompile Include="basiclib\BasicLibString.cpp" />
+    <ClCompile Include="basiclib\BasicLibTime.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thread\ThreadException.h" />
@@ -39,5 +42,11 @@
     <ClInclude Include="message\BaseMsg.pb.h" />
     <ClInclude Include="basic\inih\cpp\INIReader.h" />
     <ClInclude Include="basic\inih\ini.h" />
+    <ClInclude Include="basiclib\BasicLib.h" />
+    <ClInclude Include="basiclib\BasicLibFunctions.h" />
+    <ClInclude Include="basiclib\BasicLibRandom.h" />
+    <ClInclude Include="basiclib\BasicLibString.h" />
+    <ClInclude Include="basiclib\BasicLibTime.h" />
+    <ClInclude Include="basiclib\BasicLibTypes.h" />
   </ItemGroup>
 </Project>

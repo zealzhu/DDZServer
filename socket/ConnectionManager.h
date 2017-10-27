@@ -238,7 +238,7 @@ void ConnectionManager<protocol>::NewConnection( DataSocket& p_socket )
 template<typename protocol>
 void ConnectionManager<protocol>::Close( clistitr p_itr )
 {
-	logger_info("connection {}:{} closed, sock {}", SocketLib::GetIPString(p_itr->GetRemoteAddress()),
+	logger_info("connection {}:{} ¹Ø±Õ, sock {}", SocketLib::GetIPString(p_itr->GetRemoteAddress()),
 		p_itr->GetRemotePort(), p_itr->GetSock());
 
 	// notify all listenners connection closed

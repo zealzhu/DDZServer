@@ -23,8 +23,35 @@ bool done = false;
 
 // Socket处理函数
 template<typename protocol>
-void SocketThreadHandler(void* pData) {
+void SocketThreadHandler(void* pData) 
+{
+	ConnectionManager<protocol>* pConnectionManager = (ConnectionManager<protocol>*)(pData);
+	while (!done)
+	{
+		try
+		{
+			// 1、检测连接的socket是否接收到新数据，有的话接收数据并放入消息队列
+			// 2、将缓存的数据通过socket发送出去
+			// 3、关闭清理无效的socket
+			pConnectionManager->Manage();
 
+			ThreadLib::YieldThread();
+		}
+		catch (SocketLib::Exception& e)
+		{
+			// catch socket errors
+			logger_error("socket error {}", e.PrintError());
+		}
+		catch (std::exception& e)
+		{
+			// catch standard errors
+			logger_error("standard error {}", e.what());
+		}
+		catch (...)
+		{
+			logger_error("connectionManager->Manage() error");
+		}
+	}
 }
 
 // 监听新连接函数
