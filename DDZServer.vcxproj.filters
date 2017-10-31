@@ -17,6 +17,9 @@
     <ClCompile Include="basiclib\BasicLibRandom.cpp" />
     <ClCompile Include="basiclib\BasicLibString.cpp" />
     <ClCompile Include="basiclib\BasicLibTime.cpp" />
+    <ClCompile Include="module\user\msg\player.pb.cc" />
+    <ClCompile Include="module\user\UserDao.cpp" />
+    <ClCompile Include="module\user\UserMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thread\ThreadException.h" />
@@ -48,5 +51,10 @@
     <ClInclude Include="basiclib\BasicLibString.h" />
     <ClInclude Include="basiclib\BasicLibTime.h" />
     <ClInclude Include="basiclib\BasicLibTypes.h" />
+    <ClInclude Include="module\user\msg\player.pb.h" />
+    <ClInclude Include="module\user\UserDao.h" />
+    <ClInclude Include="module\user\UserMgr.h" />
+    <ClInclude Include="module\IModule.h" />
+    <ClInclude Include="module\ModuleMgr.h" />
   </ItemGroup>
 </Project>

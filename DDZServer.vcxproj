@@ -134,6 +134,9 @@
     <ClCompile Include="basic\GameLog.cpp" />
     <ClCompile Include="message\BaseMsg.pb.cc" />
     <ClCompile Include="message\MsgMgr.cpp" />
+    <ClCompile Include="module\user\msg\player.pb.cc" />
+    <ClCompile Include="module\user\UserDao.cpp" />
+    <ClCompile Include="module\user\UserMgr.cpp" />
     <ClCompile Include="protocol\Protobuf.cpp" />
     <ClCompile Include="socket\SocketLibErrors.cpp" />
     <ClCompile Include="socket\SocketLibSocket.cpp" />
@@ -157,6 +160,11 @@
     <ClInclude Include="basic\inih\ini.h" />
     <ClInclude Include="message\BaseMsg.pb.h" />
     <ClInclude Include="message\MsgMgr.h" />
+    <ClInclude Include="module\IModule.h" />
+    <ClInclude Include="module\ModuleMgr.h" />
+    <ClInclude Include="module\user\msg\player.pb.h" />
+    <ClInclude Include="module\user\UserDao.h" />
+    <ClInclude Include="module\user\UserMgr.h" />
     <ClInclude Include="protocol\Protobuf.h" />
     <ClInclude Include="socket\Connection.h" />
     <ClInclude Include="socket\ConnectionManager.h" />

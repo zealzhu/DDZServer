@@ -12,6 +12,7 @@
 #include <string>
 #include "message/MsgMgr.h"
 #include "thread/ThreadLib.h"
+#include "module/ModuleMgr.h"
 
 using namespace SocketLib;
 using namespace zhu;
@@ -87,13 +88,82 @@ void NewConnectionThreadHandler(void* pData) {
 // 消息接收队列处理函数
 template<typename protocol>
 void RecvMsgQueueThreadHandler(void* pData) {
-
+	while (!done)
+	{
+		try
+		{
+			// 判断有没有待处理的消息数据
+			if (CMsgMgr::getInstance().receivedMsgEmpty())
+			{
+				ThreadLib::YieldThread();
+				continue;
+			}
+			MSG_PTR pMsg = CMsgMgr::getInstance().getReceivedMsg();
+			if (NULL == pMsg.get())
+			{
+				logger_error("ReceivedMsg is illegal");
+				return;
+			}
+			logger_debug("begin handle received msg, type {}", pMsg->GetTypeName());
+			// 游戏业务逻辑处理
+			CModuleMgr<CProtobuf>::Instance().DispatchMsg(pMsg);
+		}
+		//catch (sql::SQLException&e)
+		//{
+		//	logger_error("{}", e.what());
+		//}
+		catch (std::exception& e)
+		{
+			// catch standard errors
+			logger_error("standard error {}", e.what());
+		}
+		catch (...) {
+			logger_error("handle receive msg error");
+		}
+	}
 }
 
 // 消息发送队列处理函数
 template<typename protocol>
 void SendMsgQueueThreadHandler(void* pData) {
-
+	ConnectionManager<protocol>* pConnectionManager = (ConnectionManager<protocol>*)(pData);
+	while (!done)
+	{
+		try
+		{
+			// 判断有没有待处理的消息数据
+			if (CMsgMgr::getInstance().responseMsgEmpty())
+			{
+				ThreadLib::YieldThread();
+				continue;
+			}
+			MSG_PTR pMsg = CMsgMgr::getInstance().getResponseMsg();
+			std::shared_ptr<zhu::SelfDescribingMessage> pRespMsg = dynamic_pointer_cast<zhu::SelfDescribingMessage>(pMsg);
+			if (NULL == pRespMsg.get())
+			{
+				logger_error("dynamic_pointer_cast msg failed, msg type {}", pMsg->GetTypeName());
+				continue;
+			}
+			for (int i = 0; i < pRespMsg->socket_size(); i++)
+			{
+				pConnectionManager->SendMsg(pRespMsg->socket(i), pRespMsg.get());
+			}
+		}
+		catch (SocketLib::Exception& e)
+		{
+			// catch socket errors
+			logger_error("socket error {}", e.PrintError());
+		}
+		catch (std::exception& e)
+		{
+			// catch standard errors
+			logger_error("standard error {}", e.what());
+		}
+		catch (...)
+		{
+			logger_error("Send Msg Thread error");
+		}
+	}
 }
 
 template<typename protocol>
@@ -167,6 +237,10 @@ int main()
 
 		// 创建消息管理器实例
 		CMsgMgr::getInstance();
+
+		// 初始化模块管理器
+		CModuleMgr<CProtobuf>::Instance().SetConnectionManager(&connectionManager);
+		CModuleMgr<CProtobuf>::Instance().InitModules();
 
 		// 创建线程
 		CreateGameServiceThread(threadHandles, listener, connectionManager);

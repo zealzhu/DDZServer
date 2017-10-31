@@ -1,0 +1,29 @@
+﻿syntax = "proto2";
+
+package zhu.score;
+
+enum ERROR_CODE {
+	SUCCESS = 0; 
+	SAVE_ERROR = 1;
+	USER_NOT_EXIT = 2;
+	SERVER_ERROR = 3; 
+}
+
+message Score {
+	required uint32 uid = 1[default = 0];
+	required float score = 2;
+}
+
+// 结算得分响应
+message SettleScoreResp {
+	required ERROR_CODE settleResult = 1;
+	optional bytes desc = 2;
+	optional float currentScore = 3;			//本次得分
+	optional float totalScore = 4;				//总分数
+	optional int32 multiple = 5;				//倍数
+}
+
+// 当前倍数
+message CurrentMultiple {
+	optional int32 multiple = 1;
+}

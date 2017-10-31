@@ -1,0 +1,76 @@
+﻿syntax = "proto2";
+
+package zhu.user;
+
+enum UserStatus { 
+	OFFLINE = 0; 
+	ONLINE = 1;
+	FORBIDDEN = 2;
+} 
+
+message LoginReq {
+	required bytes account = 1;
+	required bytes password = 2;
+	optional bytes verifyCode = 3;
+}
+
+enum ERROR_CODE { 
+	SUCCESS = 0; 
+	ACCOUNT_NOT_EXIST = 1;
+	ACCOUNT_OR_PASSWD_ERROR = 2; 
+	ALREADY_LOGON = 3; 
+	ILLEGAL_PARAM = 4; 
+	SERVER_ERROR = 5; 
+}
+
+message LoginResp { 
+	required ERROR_CODE loginResult = 1;
+	optional bytes desc = 2;
+	optional uint32 id = 3;
+	optional bytes account = 4;
+}
+
+message LogoutReq {
+	required uint32 id = 1;
+	required bytes account = 2;
+}
+
+message LogoutResp { 
+	required ERROR_CODE logoutResult = 1;
+}
+
+message Player {
+	required int32 socket = 1[default = -1];
+	required uint32 id = 2[default = 0];
+	required bytes account = 3;
+	required bytes password = 4;
+	required bytes name = 5;
+	optional bytes email = 6;
+
+	enum SexType {
+		MALE = 0;
+		FEMALE = 1;
+	}
+	optional SexType sex = 7 [default = MALE];
+
+	enum PhoneType {
+		MOBILE = 0;
+		HOME = 1;
+		WORK = 2;
+	}
+
+	message PhoneNumber {
+		required bytes number = 1;
+		optional PhoneType type = 2 [default = HOME];
+	}
+
+	repeated PhoneNumber phones = 8;
+	optional UserStatus status = 9;
+	optional int32 money = 10;
+	optional bytes desc = 11;
+}
+
+message OnlineOfflineNotify {
+	required bytes account = 1;
+	required bool online = 3;
+}
