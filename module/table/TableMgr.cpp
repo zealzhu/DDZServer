@@ -1,26 +1,26 @@
 ﻿#include "TableMgr.h"
 #include "../../message/MsgMgr.h"
 
-void zhu::CTableMgr::HandleMsg(std::shared_ptr<nd::SelfDescribingMessage> pMsg)
+void zhu::CTableMgr::HandleMsg(std::shared_ptr<zhu::SelfDescribingMessage> pMsg)
 {
 	// 解析消息正文
 	CProtobuf::ErrorCode pErrorCode;
 	MessagePtr pInnerMsg = CProtobuf::parseInnerMsg(pMsg, pErrorCode);
 
 	// 解析出错
-	if (nd::CProtobuf::ErrorCode::UNKNOWN_MESSAGE_TYPE == pErrorCode || nd::CProtobuf::ErrorCode::PARSE_ERROR == pErrorCode)
+	if (zhu::CProtobuf::ErrorCode::UNKNOWN_MESSAGE_TYPE == pErrorCode || zhu::CProtobuf::ErrorCode::PARSE_ERROR == pErrorCode)
 	{
 		logger_error("CProtobuf parseInnerMsg failed");
 		// 创建一条消息
-		std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+		std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 		// 设置客户端地址
 		pPayload->add_socket(pMsg->socket(0));
 		// 创建错误信息
-		std::shared_ptr<nd::ErrorMessage> pErrorMessage(NEW_ND nd::ErrorMessage());
+		std::shared_ptr<zhu::ErrorMessage> pErrorMessage(NEW_ND zhu::ErrorMessage());
 		pErrorMessage->set_desc("erro from server parse");
 		pPayload->set_message_data(pErrorMessage->SerializeAsString());
 		pPayload->set_type_name(pErrorMessage->GetTypeName());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -71,7 +71,7 @@ void zhu::CTableMgr::RoomUserNumberChange(ROOM_PTR pRoom, const int iUserNumber)
 		// 如果房间是开始状态则游戏结束并通知其他玩家
 		if (pRoom->status() == room::RoomStatus::START) {
 			// 创建响应消息
-			std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+			std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 			std::shared_ptr<PlayerOut> pErrorMessage(NEW_ND PlayerOut());
 			pPayload->set_type_name(pErrorMessage->GetTypeName());
 			pErrorMessage->set_errorresult(ERROR_CODE::PLAYER_OUT_GAME);
@@ -111,7 +111,7 @@ void zhu::CTableMgr::RoomUserNumberChange(ROOM_PTR pRoom, const int iUserNumber)
 
 			logger_error("some body leave, clear table");
 			pPayload->set_message_data(pErrorMessage->SerializeAsString());
-			CMsgMgr::Instance().InsertResponseMsg(pPayload);
+			CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 			// 清扫牌桌
 			auto pTable = m_mapTables[pRoom->id()];
@@ -235,7 +235,7 @@ void zhu::CTableMgr::InitTable(TABLE_PTR pTable)
 void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<PlayResp> pPlayResp(NEW_ND PlayResp());
 	pPayload->set_type_name(pPlayResp->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -243,6 +243,7 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	TABLE_PTR pTable = m_mapTables[pPlayReq->roomid()];
 	Player player = pTable->GetPlayerByAccount(pPlayReq->account());
 	pPlayResp->set_account(pPlayReq->account());
+	pPlayResp->set_currentposition(pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(pPlayReq->account()))->position());
 
 	// 判断是否不出
 	if (pPlayReq->type() == table::PLAY_TYPE::NO_PLAYER) {
@@ -267,7 +268,7 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 			pPlayResp->set_desc("must be play");
 			logger_error("{} {}", pPlayReq->account(), pPlayResp->desc());
 			pPayload->set_message_data(pPlayResp->SerializeAsString());
-			CMsgMgr::Instance().InsertResponseMsg(pPayload);
+			CMsgMgr::getInstance().insertResponseMsg(pPayload);
 			return;
 		}
 	}
@@ -278,7 +279,7 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 		pPlayResp->set_desc("play type error");
 		logger_error("{} {}", pPlayReq->account(), pPlayResp->desc());
 		pPayload->set_message_data(pPlayResp->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -288,7 +289,7 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 		pPlayResp->set_desc("play not enough big");
 		logger_error("{} {}", pPlayReq->account(), pPlayResp->desc());
 		pPayload->set_message_data(pPlayResp->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 	// 移除手牌
@@ -297,7 +298,7 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	}
 
 	// 发送出的牌给其他玩家
-	std::shared_ptr<nd::SelfDescribingMessage> pDispatchPaload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pDispatchPaload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<DispatchPoker> pDispatchPokerMsg(NEW_ND DispatchPoker());
 	pDispatchPaload->set_type_name(pDispatchPokerMsg->GetTypeName());
 	pDispatchPokerMsg->set_landlordaccount(pPlayReq->account());// 设置出牌的账号
@@ -338,7 +339,9 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	// 发送成功消息
 	pTable->ChangeToNextPlayerRequest();
 	pPlayResp->set_playresult(table::ERROR_CODE::SUCCESS);
-	pPlayResp->set_next(pTable->GetCurrentRequestPlayerAccount());
+	auto nextAccount = pTable->GetCurrentRequestPlayerAccount();
+	pPlayResp->set_next(nextAccount);
+	pPlayResp->set_nextposition(pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(nextAccount))->position());
 	pPlayResp->set_desc("play success");
 	logger_info("{} {}", pPlayReq->account(), pPlayResp->desc());
 	pPayload->set_message_data(pPlayResp->SerializeAsString());
@@ -351,9 +354,10 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 void zhu::CTableMgr::Deal(TABLE_PTR pTable, string strAccount, Player player)
 {
 	auto pSeat = pTable->GetSeatByPlayer(player);
+	auto pLandlordSeat = pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(strAccount));
 
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<DispatchPoker> pDispatchPokerMsg(NEW_ND DispatchPoker());
 	pPayload->set_type_name(pDispatchPokerMsg->GetTypeName());
 	pPayload->add_socket(pSeat->socket());
@@ -361,6 +365,7 @@ void zhu::CTableMgr::Deal(TABLE_PTR pTable, string strAccount, Player player)
 	// 设置叫地主的账号
 	pDispatchPokerMsg->set_landlordaccount(strAccount);
 	pDispatchPokerMsg->set_type(DispatchPokerType::DEAL_POKER);
+	pDispatchPokerMsg->set_position(pLandlordSeat->position());
 	
 	// 赋值牌的信息
 	for (INT_VECTOR_ITER it = pTable->GetPlayerPockerId(player)->begin(); pTable->GetPlayerPockerId(player)->end() != it; it++) {
@@ -372,14 +377,14 @@ void zhu::CTableMgr::Deal(TABLE_PTR pTable, string strAccount, Player player)
 	// 发送响应消息
 	logger_info("send pocker to socket {}", pSeat->playeraccount());
 	pPayload->set_message_data(pDispatchPokerMsg->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 }
 
 void zhu::CTableMgr::ShowLandlordPoker(Player player, TABLE_PTR pTable)
 {
 	auto pSeat = pTable->GetSeatByPlayer(player);
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<DispatchPoker> pDispatchPokerMsg(NEW_ND DispatchPoker());
 	pPayload->set_type_name(pDispatchPokerMsg->GetTypeName());
 	pPayload->add_socket(pSeat->socket());
@@ -406,7 +411,7 @@ void zhu::CTableMgr::ShowCurrentPoker(Player player, TABLE_PTR pTable)
 {
 	auto pSeat = pTable->GetSeatByPlayer(player);
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<DispatchPoker> pDispatchPokerMsg(NEW_ND DispatchPoker());
 	pPayload->set_type_name(pDispatchPokerMsg->GetTypeName());
 	pPayload->add_socket(pSeat->socket());
@@ -424,13 +429,13 @@ void zhu::CTableMgr::ShowCurrentPoker(Player player, TABLE_PTR pTable)
 	// 发送响应消息
 	logger_info("show {} pokers", pSeat->playeraccount());
 	pPayload->set_message_data(pDispatchPokerMsg->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 }
 
 void zhu::CTableMgr::RequestLandlord(int iSocket, REQUEST_LANDLORD_REQ pMsg)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<RequestLandlordResp> pRequestLandlordMsg(NEW_ND RequestLandlordResp());
 	pPayload->set_type_name(pRequestLandlordMsg->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -440,6 +445,7 @@ void zhu::CTableMgr::RequestLandlord(int iSocket, REQUEST_LANDLORD_REQ pMsg)
 
 	// 对应玩家
 	Player player = pTable->GetPlayerByAccount(pMsg->account());
+	auto seat = pTable->GetSeatByPlayer(player);
 
 	ERROR_CODE code = (ERROR_CODE)pTable->RequestLandlord(player, pMsg->call());
 	pRequestLandlordMsg->set_calllandlordresult(code);
@@ -451,14 +457,16 @@ void zhu::CTableMgr::RequestLandlord(int iSocket, REQUEST_LANDLORD_REQ pMsg)
 		// 发送响应消息
 		logger_info("no turn to {} request landlord", pMsg->account());
 		pPayload->set_message_data(pRequestLandlordMsg->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 	}
 	// 未选出地主则发送通知给所有用户继续选
 	else if (code == ERROR_CODE::NOT_SELECTED_LANDLORD) {
 		auto nextRequestInfo = pTable->GetCurrentRequestLandlordInfo();
 		pRequestLandlordMsg->set_account(pMsg->account());
+		pRequestLandlordMsg->set_currentposition(seat->position());
 		pRequestLandlordMsg->set_call(pMsg->call());
 		pRequestLandlordMsg->set_next(pTable->GetAccountByPlayer(nextRequestInfo.player));
+		pRequestLandlordMsg->set_nextposition(pTable->GetSeatByPlayer(nextRequestInfo.player)->position());
 		pRequestLandlordMsg->set_type(pMsg->type());
 		pRequestLandlordMsg->set_nexttype(nextRequestInfo.type);
 
@@ -485,7 +493,9 @@ void zhu::CTableMgr::RequestLandlord(int iSocket, REQUEST_LANDLORD_REQ pMsg)
 		auto nextRequestInfo = pTable->GetCurrentRequestLandlordInfo();
 		pRequestLandlordMsg->set_desc("selected landlord");
 		pRequestLandlordMsg->set_account(pMsg->account());
+		pRequestLandlordMsg->set_currentposition(seat->position());
 		pRequestLandlordMsg->set_next(pTable->GetAccountByPlayer(nextRequestInfo.player));
+		pRequestLandlordMsg->set_nextposition(pTable->GetSeatByPlayer(nextRequestInfo.player)->position());
 		pRequestLandlordMsg->set_type(nextRequestInfo.type);
 
 		pPayload->set_message_data(pRequestLandlordMsg->SerializeAsString());
@@ -507,7 +517,7 @@ void zhu::CTableMgr::RequestLandlord(int iSocket, REQUEST_LANDLORD_REQ pMsg)
 	}
 }
 
-void zhu::CTableMgr::SendResponseToOtherPlayer(std::shared_ptr<nd::SelfDescribingMessage> pMsg, 
+void zhu::CTableMgr::SendResponseToOtherPlayer(std::shared_ptr<zhu::SelfDescribingMessage> pMsg, 
 	Player player, TABLE_PTR pTable)
 {
 	Player onePlayer = (Player)((player + 1) % 3);
@@ -520,6 +530,6 @@ void zhu::CTableMgr::SendResponseToOtherPlayer(std::shared_ptr<nd::SelfDescribin
 	pMsg->add_socket(pSeat2->socket());
 
 	// 发送响应消息
-	CMsgMgr::Instance().InsertResponseMsg(pMsg);
+	CMsgMgr::getInstance().insertResponseMsg(pMsg);
 }
 

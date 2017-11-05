@@ -1,5 +1,3 @@
-#pragma once
-
 #include <string>
 #include "msg/player.pb.h"
 
@@ -17,17 +15,17 @@ namespace zhu
 			return instance;
 		}
 
-		bool IsExist(int iId) { return true; }
+		bool IsExist(int iId);
 
-		bool IsExist(const ::std::string& strAccount) { return true; }
+		bool IsExist(const char * strAccount);
 
-		PLAYER_PTR GetPlayer(const ::std::string& strAccount, const ::std::string& strPassword);
+		PLAYER_PTR GetPlayer(const char * strAccount, const char * strPassword);
 
 		zhu::user::UserStatus StatusFromString(std::string strStatus);
 
-		bool AddNewAccount(PLAYER_PTR pRegisterReq) { return true; }
+		bool AddNewAccount(PLAYER_PTR pRegisterReq);
 
-		bool ChangeAccountStatus(const std::string& strAccount, zhu::user::UserStatus status);
+		bool ChangeAccountStatus(const char * strAccount, zhu::user::UserStatus status);
 
 	private:
 		CUserDao() {};

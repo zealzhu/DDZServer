@@ -583,6 +583,20 @@ class PlayResp : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::zhu::table::ERROR_CODE playresult() const;
   void set_playresult(::zhu::table::ERROR_CODE value);
 
+  // optional uint32 nextPosition = 5;
+  bool has_nextposition() const;
+  void clear_nextposition();
+  static const int kNextPositionFieldNumber = 5;
+  ::google::protobuf::uint32 nextposition() const;
+  void set_nextposition(::google::protobuf::uint32 value);
+
+  // optional uint32 currentPosition = 6;
+  bool has_currentposition() const;
+  void clear_currentposition();
+  static const int kCurrentPositionFieldNumber = 6;
+  ::google::protobuf::uint32 currentposition() const;
+  void set_currentposition(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:zhu.table.PlayResp)
  private:
   void set_has_playresult();
@@ -593,6 +607,10 @@ class PlayResp : public ::google::protobuf::Message /* @@protoc_insertion_point(
   void clear_has_account();
   void set_has_next();
   void clear_has_next();
+  void set_has_nextposition();
+  void clear_has_nextposition();
+  void set_has_currentposition();
+  void clear_has_currentposition();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -601,6 +619,8 @@ class PlayResp : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::internal::ArenaStringPtr account_;
   ::google::protobuf::internal::ArenaStringPtr next_;
   int playresult_;
+  ::google::protobuf::uint32 nextposition_;
+  ::google::protobuf::uint32 currentposition_;
   friend struct protobuf_table_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -840,10 +860,10 @@ class RequestLandlordResp : public ::google::protobuf::Message /* @@protoc_inser
   ::std::string* release_account();
   void set_allocated_account(::std::string* account);
 
-  // optional bytes next = 7;
+  // optional bytes next = 8;
   bool has_next() const;
   void clear_next();
-  static const int kNextFieldNumber = 7;
+  static const int kNextFieldNumber = 8;
   const ::std::string& next() const;
   void set_next(const ::std::string& value);
   #if LANG_CXX11
@@ -862,26 +882,40 @@ class RequestLandlordResp : public ::google::protobuf::Message /* @@protoc_inser
   ::zhu::table::ERROR_CODE calllandlordresult() const;
   void set_calllandlordresult(::zhu::table::ERROR_CODE value);
 
-  // optional bool call = 4;
+  // optional uint32 currentPosition = 4;
+  bool has_currentposition() const;
+  void clear_currentposition();
+  static const int kCurrentPositionFieldNumber = 4;
+  ::google::protobuf::uint32 currentposition() const;
+  void set_currentposition(::google::protobuf::uint32 value);
+
+  // optional bool call = 5;
   bool has_call() const;
   void clear_call();
-  static const int kCallFieldNumber = 4;
+  static const int kCallFieldNumber = 5;
   bool call() const;
   void set_call(bool value);
 
-  // optional .zhu.table.RequestLandlordType type = 5;
+  // optional .zhu.table.RequestLandlordType type = 6;
   bool has_type() const;
   void clear_type();
-  static const int kTypeFieldNumber = 5;
+  static const int kTypeFieldNumber = 6;
   ::zhu::table::RequestLandlordType type() const;
   void set_type(::zhu::table::RequestLandlordType value);
 
-  // optional .zhu.table.RequestLandlordType nextType = 6;
+  // optional .zhu.table.RequestLandlordType nextType = 7;
   bool has_nexttype() const;
   void clear_nexttype();
-  static const int kNextTypeFieldNumber = 6;
+  static const int kNextTypeFieldNumber = 7;
   ::zhu::table::RequestLandlordType nexttype() const;
   void set_nexttype(::zhu::table::RequestLandlordType value);
+
+  // optional uint32 nextPosition = 9;
+  bool has_nextposition() const;
+  void clear_nextposition();
+  static const int kNextPositionFieldNumber = 9;
+  ::google::protobuf::uint32 nextposition() const;
+  void set_nextposition(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:zhu.table.RequestLandlordResp)
  private:
@@ -891,6 +925,8 @@ class RequestLandlordResp : public ::google::protobuf::Message /* @@protoc_inser
   void clear_has_desc();
   void set_has_account();
   void clear_has_account();
+  void set_has_currentposition();
+  void clear_has_currentposition();
   void set_has_call();
   void clear_has_call();
   void set_has_type();
@@ -899,6 +935,8 @@ class RequestLandlordResp : public ::google::protobuf::Message /* @@protoc_inser
   void clear_has_nexttype();
   void set_has_next();
   void clear_has_next();
+  void set_has_nextposition();
+  void clear_has_nextposition();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -907,9 +945,11 @@ class RequestLandlordResp : public ::google::protobuf::Message /* @@protoc_inser
   ::google::protobuf::internal::ArenaStringPtr account_;
   ::google::protobuf::internal::ArenaStringPtr next_;
   int calllandlordresult_;
+  ::google::protobuf::uint32 currentposition_;
   bool call_;
   int type_;
   int nexttype_;
+  ::google::protobuf::uint32 nextposition_;
   friend struct protobuf_table_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1020,12 +1060,21 @@ class DispatchPoker : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::zhu::table::DispatchPokerType type() const;
   void set_type(::zhu::table::DispatchPokerType value);
 
+  // optional uint32 position = 4;
+  bool has_position() const;
+  void clear_position();
+  static const int kPositionFieldNumber = 4;
+  ::google::protobuf::uint32 position() const;
+  void set_position(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:zhu.table.DispatchPoker)
  private:
   void set_has_type();
   void clear_has_type();
   void set_has_landlordaccount();
   void clear_has_landlordaccount();
+  void set_has_position();
+  void clear_has_position();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -1033,6 +1082,7 @@ class DispatchPoker : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::google::protobuf::RepeatedPtrField< ::zhu::table::Poker > pockers_;
   ::google::protobuf::internal::ArenaStringPtr landlordaccount_;
   int type_;
+  ::google::protobuf::uint32 position_;
   friend struct protobuf_table_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1608,6 +1658,54 @@ inline void PlayResp::set_allocated_next(::std::string* next) {
   // @@protoc_insertion_point(field_set_allocated:zhu.table.PlayResp.next)
 }
 
+// optional uint32 nextPosition = 5;
+inline bool PlayResp::has_nextposition() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void PlayResp::set_has_nextposition() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void PlayResp::clear_has_nextposition() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void PlayResp::clear_nextposition() {
+  nextposition_ = 0u;
+  clear_has_nextposition();
+}
+inline ::google::protobuf::uint32 PlayResp::nextposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.PlayResp.nextPosition)
+  return nextposition_;
+}
+inline void PlayResp::set_nextposition(::google::protobuf::uint32 value) {
+  set_has_nextposition();
+  nextposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.PlayResp.nextPosition)
+}
+
+// optional uint32 currentPosition = 6;
+inline bool PlayResp::has_currentposition() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void PlayResp::set_has_currentposition() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void PlayResp::clear_has_currentposition() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void PlayResp::clear_currentposition() {
+  currentposition_ = 0u;
+  clear_has_currentposition();
+}
+inline ::google::protobuf::uint32 PlayResp::currentposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.PlayResp.currentPosition)
+  return currentposition_;
+}
+inline void PlayResp::set_currentposition(::google::protobuf::uint32 value) {
+  set_has_currentposition();
+  currentposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.PlayResp.currentPosition)
+}
+
 // -------------------------------------------------------------------
 
 // RequestLandlordReq
@@ -1903,15 +2001,39 @@ inline void RequestLandlordResp::set_allocated_account(::std::string* account) {
   // @@protoc_insertion_point(field_set_allocated:zhu.table.RequestLandlordResp.account)
 }
 
-// optional bool call = 4;
-inline bool RequestLandlordResp::has_call() const {
+// optional uint32 currentPosition = 4;
+inline bool RequestLandlordResp::has_currentposition() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void RequestLandlordResp::set_has_call() {
+inline void RequestLandlordResp::set_has_currentposition() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void RequestLandlordResp::clear_has_call() {
+inline void RequestLandlordResp::clear_has_currentposition() {
   _has_bits_[0] &= ~0x00000010u;
+}
+inline void RequestLandlordResp::clear_currentposition() {
+  currentposition_ = 0u;
+  clear_has_currentposition();
+}
+inline ::google::protobuf::uint32 RequestLandlordResp::currentposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.RequestLandlordResp.currentPosition)
+  return currentposition_;
+}
+inline void RequestLandlordResp::set_currentposition(::google::protobuf::uint32 value) {
+  set_has_currentposition();
+  currentposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.currentPosition)
+}
+
+// optional bool call = 5;
+inline bool RequestLandlordResp::has_call() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void RequestLandlordResp::set_has_call() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void RequestLandlordResp::clear_has_call() {
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void RequestLandlordResp::clear_call() {
   call_ = false;
@@ -1927,15 +2049,15 @@ inline void RequestLandlordResp::set_call(bool value) {
   // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.call)
 }
 
-// optional .zhu.table.RequestLandlordType type = 5;
+// optional .zhu.table.RequestLandlordType type = 6;
 inline bool RequestLandlordResp::has_type() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void RequestLandlordResp::set_has_type() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void RequestLandlordResp::clear_has_type() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void RequestLandlordResp::clear_type() {
   type_ = 0;
@@ -1952,15 +2074,15 @@ inline void RequestLandlordResp::set_type(::zhu::table::RequestLandlordType valu
   // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.type)
 }
 
-// optional .zhu.table.RequestLandlordType nextType = 6;
+// optional .zhu.table.RequestLandlordType nextType = 7;
 inline bool RequestLandlordResp::has_nexttype() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void RequestLandlordResp::set_has_nexttype() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void RequestLandlordResp::clear_has_nexttype() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void RequestLandlordResp::clear_nexttype() {
   nexttype_ = 0;
@@ -1977,7 +2099,7 @@ inline void RequestLandlordResp::set_nexttype(::zhu::table::RequestLandlordType 
   // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.nextType)
 }
 
-// optional bytes next = 7;
+// optional bytes next = 8;
 inline bool RequestLandlordResp::has_next() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -2038,6 +2160,30 @@ inline void RequestLandlordResp::set_allocated_next(::std::string* next) {
   }
   next_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), next);
   // @@protoc_insertion_point(field_set_allocated:zhu.table.RequestLandlordResp.next)
+}
+
+// optional uint32 nextPosition = 9;
+inline bool RequestLandlordResp::has_nextposition() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void RequestLandlordResp::set_has_nextposition() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void RequestLandlordResp::clear_has_nextposition() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void RequestLandlordResp::clear_nextposition() {
+  nextposition_ = 0u;
+  clear_has_nextposition();
+}
+inline ::google::protobuf::uint32 RequestLandlordResp::nextposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.RequestLandlordResp.nextPosition)
+  return nextposition_;
+}
+inline void RequestLandlordResp::set_nextposition(::google::protobuf::uint32 value) {
+  set_has_nextposition();
+  nextposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.nextPosition)
 }
 
 // -------------------------------------------------------------------
@@ -2160,6 +2306,30 @@ inline void DispatchPoker::set_allocated_landlordaccount(::std::string* landlord
   }
   landlordaccount_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), landlordaccount);
   // @@protoc_insertion_point(field_set_allocated:zhu.table.DispatchPoker.landlordAccount)
+}
+
+// optional uint32 position = 4;
+inline bool DispatchPoker::has_position() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DispatchPoker::set_has_position() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DispatchPoker::clear_has_position() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DispatchPoker::clear_position() {
+  position_ = 0u;
+  clear_has_position();
+}
+inline ::google::protobuf::uint32 DispatchPoker::position() const {
+  // @@protoc_insertion_point(field_get:zhu.table.DispatchPoker.position)
+  return position_;
+}
+inline void DispatchPoker::set_position(::google::protobuf::uint32 value) {
+  set_has_position();
+  position_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.DispatchPoker.position)
 }
 
 // -------------------------------------------------------------------

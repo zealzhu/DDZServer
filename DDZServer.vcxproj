@@ -22,12 +22,13 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{0590CB46-AD0E-49CB-AC50-CB5CCE6A2EE3}</ProjectGuid>
     <RootNamespace>DDZServer</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -40,7 +41,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140_xp</PlatformToolset>
+    <PlatformToolset>v141_xp</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -74,13 +75,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>G:\zhu\DDZServer\basic;G:\zhu\DDZServer\include\mysql-connector;G:\zhu\DDZServer\include;G:\zhu\DDZServer\include\protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Users\zhu\Documents\DDZServer;C:\Users\zhu\Desktop\lib\boost_1_65_1;C:\Users\zhu\Desktop\lib\spdlog\spdlog\include;C:\Users\zhu\Desktop\lib\mysql-connector\include;C:\Users\zhu\Desktop\lib\protobuf\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;_DEBUG;WIN32;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>G:\zhu\DDZServer\lib\mysql-connector;G:\zhu\DDZServer\lib\libprotobuf\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libprotobufd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\zhu\Desktop\lib\mysql-connector\lib;C:\Users\zhu\Desktop\lib\protobuf\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libprotobufd.lib;mysqlcppconn.lib;mysqlcppconn-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -130,10 +131,17 @@
     <ClCompile Include="basic\ConfigMgr.cpp" />
     <ClCompile Include="basic\inih\cpp\INIReader.cpp" />
     <ClCompile Include="basic\inih\ini.c" />
+    <ClCompile Include="db\ConnectionPool.cpp" />
+    <ClCompile Include="db\DbMgr.cpp" />
     <ClCompile Include="DDZServer.cpp" />
     <ClCompile Include="basic\GameLog.cpp" />
     <ClCompile Include="message\BaseMsg.pb.cc" />
     <ClCompile Include="message\MsgMgr.cpp" />
+    <ClCompile Include="module\room\msg\room.pb.cc" />
+    <ClCompile Include="module\room\RoomMgr.cpp" />
+    <ClCompile Include="module\table\msg\table.pb.cc" />
+    <ClCompile Include="module\table\Table.cpp" />
+    <ClCompile Include="module\table\TableMgr.cpp" />
     <ClCompile Include="module\user\msg\player.pb.cc" />
     <ClCompile Include="module\user\UserDao.cpp" />
     <ClCompile Include="module\user\UserMgr.cpp" />
@@ -143,6 +151,7 @@
     <ClCompile Include="socket\SocketLibSystem.cpp" />
     <ClCompile Include="socket\SocketSet.cpp" />
     <ClCompile Include="thread\ThreadLibFunctions.cpp" />
+    <ClCompile Include="utils\StringUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="basiclib\BasicLib.h" />
@@ -151,17 +160,24 @@
     <ClInclude Include="basiclib\BasicLibString.h" />
     <ClInclude Include="basiclib\BasicLibTime.h" />
     <ClInclude Include="basiclib\BasicLibTypes.h" />
-    <ClInclude Include="basic\basic.h" />
+    <ClInclude Include="basic\Basic.h" />
     <ClInclude Include="basic\Exception.h" />
     <ClInclude Include="basic\FileUtil.h" />
     <ClInclude Include="basic\GameLog.h" />
     <ClInclude Include="basic\ConfigMgr.h" />
     <ClInclude Include="basic\inih\cpp\INIReader.h" />
     <ClInclude Include="basic\inih\ini.h" />
+    <ClInclude Include="db\ConnectionPool.h" />
+    <ClInclude Include="db\DbMgr.h" />
     <ClInclude Include="message\BaseMsg.pb.h" />
     <ClInclude Include="message\MsgMgr.h" />
     <ClInclude Include="module\IModule.h" />
     <ClInclude Include="module\ModuleMgr.h" />
+    <ClInclude Include="module\room\msg\room.pb.h" />
+    <ClInclude Include="module\room\RoomMgr.h" />
+    <ClInclude Include="module\table\msg\table.pb.h" />
+    <ClInclude Include="module\table\Table.h" />
+    <ClInclude Include="module\table\TableMgr.h" />
     <ClInclude Include="module\user\msg\player.pb.h" />
     <ClInclude Include="module\user\UserDao.h" />
     <ClInclude Include="module\user\UserMgr.h" />
@@ -179,6 +195,7 @@
     <ClInclude Include="thread\ThreadLib.h" />
     <ClInclude Include="thread\ThreadLibFunctions.h" />
     <ClInclude Include="thread\ThreadLibMutex.h" />
+    <ClInclude Include="utils\StringUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

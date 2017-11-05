@@ -61,8 +61,6 @@ enum ERROR_CODE {
 	SERVER_ERROR = 13;
 }
 
-
-
 // 请求地主类型，叫地主或者抢地主
 enum RequestLandlordType {
 	RUSH = 0;
@@ -98,6 +96,8 @@ message PlayResp {
 	optional bytes desc = 2;					//响应消息
 	optional bytes account = 3;					//当前请求玩家
 	optional bytes next = 4;					//下一个请求账号
+	optional uint32 nextPosition = 5;			// 下一个请求玩家座位
+	optional uint32 currentPosition = 6;		// 当前请求玩家座位
 }
 
 // 请求地主
@@ -110,20 +110,23 @@ message RequestLandlordReq {
 
 // 请求地主响应
 message RequestLandlordResp {
-	required ERROR_CODE callLandlordResult = 1;		//响应类型
-	optional bytes desc = 2;						//响应消息
-	optional bytes account = 3;						//当前请求地主玩家
-	optional bool call = 4;							//是否请求地主
-	optional RequestLandlordType type = 5;			//本次请求类型
-	optional RequestLandlordType nextType = 6;		//下一次请求类型
-	optional bytes next = 7;						//下一个请求账号
+	required ERROR_CODE callLandlordResult = 1;		// 响应类型
+	optional bytes desc = 2;						// 响应消息
+	optional bytes account = 3;						// 当前请求地主玩家
+	optional uint32 currentPosition = 4;			// 当前请求地主玩家座位
+	optional bool call = 5;							// 是否请求地主
+	optional RequestLandlordType type = 6;			// 本次请求类型
+	optional RequestLandlordType nextType = 7;		// 下一次请求类型
+	optional bytes next = 8;						// 下一个请求账号
+	optional uint32 nextPosition = 9;				// 下一个请求地主玩家座位
 }
 
 // 分发扑克
 message DispatchPoker {
-	repeated Poker pockers = 1;							//扑克
-	required DispatchPokerType type = 2;				//类型
-	optional bytes landlordAccount = 3;					//地主玩家或者是出牌玩家
+	repeated Poker pockers = 1;							// 扑克
+	required DispatchPokerType type = 2;				// 类型
+	optional bytes landlordAccount = 3;					// 地主玩家或者是出牌玩家
+	optional uint32 position = 4;						// 出牌玩家位置
 }
 
 // 玩家退出游戏响应

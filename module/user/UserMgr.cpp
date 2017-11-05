@@ -1,4 +1,4 @@
-﻿//#include "../../utils/StringUtils.h"
+﻿#include "../../utils/StringUtils.h"
 #include "../../basic/Basic.h"
 #include "../../protocol/Protobuf.h"
 #include "../../message/MsgMgr.h"
@@ -72,7 +72,7 @@ void zhu::CUserMgr::Register(int iSocket, PLAYER_PTR pRegisterReq)
 		return;
 	}
 
-	if (CUserDao::Instance().IsExist(pRegisterReq->account()))
+	if (CUserDao::Instance().IsExist(pRegisterReq->account().c_str()))
 	{
 		pErrorMessage->set_desc("account already exist");
 		logger_error("account {} already exist", pRegisterReq->account());
@@ -99,7 +99,7 @@ void zhu::CUserMgr::Register(int iSocket, PLAYER_PTR pRegisterReq)
 
 bool zhu::CUserMgr::ValidateRegisterReq(PLAYER_PTR pRegisterReq, zhu::ErrorMessage& errorMessage)
 {
-	/*if (!CStringUtils::IsValidAccount(pRegisterReq->account()))
+	if (!CStringUtils::IsValidAccount(pRegisterReq->account()))
 	{
 		errorMessage.set_desc("account invalid, must be 3-16 number of alpha or digit");
 		return false;
@@ -121,19 +121,19 @@ bool zhu::CUserMgr::ValidateRegisterReq(PLAYER_PTR pRegisterReq, zhu::ErrorMessa
 	}
 	for (int i = 0; i < pRegisterReq->phones_size(); i++)
 	{
-		if (nd::user::Player_PhoneType_MOBILE == pRegisterReq->phones(i).type()
+		if (zhu::user::Player_PhoneType_MOBILE == pRegisterReq->phones(i).type()
 			&& !CStringUtils::IsValidMobile(pRegisterReq->phones(i).number()))
 		{
 			errorMessage.set_desc("mobile invalid");
 			return false;
 		}
-		else if (nd::user::Player_PhoneType_HOME == pRegisterReq->phones(i).type()
+		else if (zhu::user::Player_PhoneType_HOME == pRegisterReq->phones(i).type()
 			&& !CStringUtils::IsValidHomeNumber(pRegisterReq->phones(i).number()))
 		{
 			errorMessage.set_desc("home phone invalid");
 			return false;
 		}
-	}*/
+	}
 
 	return true;
 }
@@ -152,7 +152,7 @@ void zhu::CUserMgr::Login(int iSocket, LOGIN_PTR pLoginMsg)
 		return;
 	}
 
-	if (!CUserDao::Instance().IsExist(pLoginMsg->account()))
+	if (!CUserDao::Instance().IsExist(pLoginMsg->account().c_str()))
 	{
 		pLoginResult->set_loginresult(zhu::user::ERROR_CODE::ACCOUNT_NOT_EXIST);
 		pLoginResult->set_desc("account not exist");
@@ -163,71 +163,70 @@ void zhu::CUserMgr::Login(int iSocket, LOGIN_PTR pLoginMsg)
 	}
 
 	// 检查账号密码
-	//PLAYER_PTR pPlayer = CUserDao::Instance().GetPlayer(pLoginMsg->account(), pLoginMsg->password());
-	//if (pPlayer->id() > 0)
-	//{
-	//	// 检查是否已经在线
-	//	//if (pPlayer->status() == nd::user::UserStatus::ONLINE) {
-	//	//	pLoginResult->set_loginresult(nd::user::ERROR_CODE::ALREADY_LOGON);
-	//	//	pLoginResult->set_desc("the account has been logined");
-	//	//	logger_error("uer account {} login failed", pLoginMsg->account());
-	//	//	pPayload->set_message_data(pLoginResult->SerializeAsString());
-	//	//	CMsgMgr::getInstance().insertResponseMsg(pPayload);
-	//	//	return;
-	//	//}
+	PLAYER_PTR pPlayer = CUserDao::Instance().GetPlayer(pLoginMsg->account().c_str(), pLoginMsg->password().c_str());
+	if (pPlayer->id() > 0)
+	{
+		// 检查是否已经在线
+		//if (pPlayer->status() == nd::user::UserStatus::ONLINE) {
+		//	pLoginResult->set_loginresult(nd::user::ERROR_CODE::ALREADY_LOGON);
+		//	pLoginResult->set_desc("the account has been logined");
+		//	logger_error("uer account {} login failed", pLoginMsg->account());
+		//	pPayload->set_message_data(pLoginResult->SerializeAsString());
+		//	CMsgMgr::getInstance().insertResponseMsg(pPayload);
+		//	return;
+		//}
 
-	//	pPlayer->set_socket(iSocket);
-	//	m_mapPlayers[pPlayer->id()] = pPlayer;
-	//	logger_debug("Player info: {}", pPlayer->DebugString());
+		pPlayer->set_socket(iSocket);
+		m_mapPlayers[pPlayer->id()] = pPlayer;
+		logger_debug("Player info: {}", pPlayer->DebugString());
 
-	//	// 修改账号状态为登录
-	//	CUserDao::Instance().ChangeAccountStatus(pPlayer->account(), nd::user::UserStatus::ONLINE);
-	//	pLoginResult->set_loginresult(nd::user::ERROR_CODE::SUCCESS);
-	//	pLoginResult->set_desc("login success");
-	//	pLoginResult->set_account(pPlayer->account());
-	//	pLoginResult->set_id(pPlayer->id());
-	//	logger_info("login success");
-	//	pPayload->set_message_data(pLoginResult->SerializeAsString());
-	//	CMsgMgr::getInstance().insertResponseMsg(pPayload);
+		// 修改账号状态为登录
+		CUserDao::Instance().ChangeAccountStatus(pPlayer->account().c_str(), zhu::user::UserStatus::ONLINE);
+		pLoginResult->set_loginresult(zhu::user::ERROR_CODE::SUCCESS);
+		pLoginResult->set_desc("login success");
+		pLoginResult->set_account(pPlayer->account());
+		pLoginResult->set_id(pPlayer->id());
+		logger_info("login success");
+		pPayload->set_message_data(pLoginResult->SerializeAsString());
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
-	//	// 发送用户上线通知给其他用户
-	//	if (m_mapPlayers.size() > 1)
-	//	{
-	//		std::shared_ptr<nd::SelfDescribingMessage> pNotifyPayload(NEW_ND nd::SelfDescribingMessage());
-	//		std::shared_ptr<nd::user::OnlineOfflineNotify> pOnlineNotify(NEW_ND nd::user::OnlineOfflineNotify());
-	//		pNotifyPayload->set_type_name(pOnlineNotify->GetTypeName());
-	//		for each (auto player in m_mapPlayers)
-	//		{
-	//			if (player.first != pPlayer->id())
-	//			{
-	//				pNotifyPayload->add_socket((player.second)->socket());
-	//			}
-	//		}
-	//		pOnlineNotify->set_account(pPlayer->account());
-	//		pOnlineNotify->set_online(true);
-	//		pNotifyPayload->set_message_data(pOnlineNotify->SerializeAsString());
-	//		CMsgMgr::getInstance().insertResponseMsg(pNotifyPayload);
-	//	}
+		// 发送用户上线通知给其他用户
+		if (m_mapPlayers.size() > 1)
+		{
+			std::shared_ptr<zhu::SelfDescribingMessage> pNotifyPayload(NEW_ND zhu::SelfDescribingMessage());
+			std::shared_ptr<zhu::user::OnlineOfflineNotify> pOnlineNotify(NEW_ND zhu::user::OnlineOfflineNotify());
+			pNotifyPayload->set_type_name(pOnlineNotify->GetTypeName());
+			for each (auto player in m_mapPlayers)
+			{
+				if (player.first != pPlayer->id())
+				{
+					pNotifyPayload->add_socket((player.second)->socket());
+				}
+			}
+			pOnlineNotify->set_account(pPlayer->account());
+			pOnlineNotify->set_online(true);
+			pNotifyPayload->set_message_data(pOnlineNotify->SerializeAsString());
+			CMsgMgr::getInstance().insertResponseMsg(pNotifyPayload);
+		}
 
-	//	// 发送用户上线通知给其他模块
-	//	NotifyUserListenners(pPlayer->account(), true);
-	//}
-	//else
-	//{
-	//	pLoginResult->set_loginresult(zhu::user::ERROR_CODE::ACCOUNT_OR_PASSWD_ERROR);
-	//	pLoginResult->set_desc("login failed, please check account or password");
-	//	logger_error("uer account {} login failed", pLoginMsg->account());
-	//	pPayload->set_message_data(pLoginResult->SerializeAsString());
-	//	CMsgMgr::getInstance().insertResponseMsg(pPayload);
-	//}
+		// 发送用户上线通知给其他模块
+		NotifyUserListenners(pPlayer->account(), true);
+	}
+	else
+	{
+		pLoginResult->set_loginresult(zhu::user::ERROR_CODE::ACCOUNT_OR_PASSWD_ERROR);
+		pLoginResult->set_desc("login failed, please check account or password");
+		logger_error("uer account {} login failed", pLoginMsg->account());
+		pPayload->set_message_data(pLoginResult->SerializeAsString());
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
+	}
 
-	PLAYER_PTR pPlayer(NEW_ND zhu::user::Player);
 	pPlayer->set_socket(iSocket);
 	m_mapPlayers[pPlayer->id()] = pPlayer;
 	logger_debug("Player info: {}", pPlayer->DebugString());
 
 	// 修改账号状态为登录
-	//CUserDao::Instance().ChangeAccountStatus(pPlayer->account(), nd::user::UserStatus::ONLINE);
+	CUserDao::Instance().ChangeAccountStatus(pPlayer->account().c_str(), zhu::user::UserStatus::ONLINE);
 	pLoginResult->set_loginresult(zhu::user::ERROR_CODE::SUCCESS);
 	pLoginResult->set_desc("login success");
 	pLoginResult->set_account(pPlayer->account());
@@ -239,18 +238,18 @@ void zhu::CUserMgr::Login(int iSocket, LOGIN_PTR pLoginMsg)
 
 bool zhu::CUserMgr::ValidateLoginReq(LOGIN_PTR pLoginMsg, zhu::user::LoginResp& errorMessage)
 {
-	//if (!CStringUtils::IsValidAccount(pLoginMsg->account()))
-	//{
-	//	errorMessage.set_desc("account invalid");
-	//	errorMessage.set_loginresult(nd::user::ERROR_CODE::ILLEGAL_PARAM);
-	//	return false;
-	//}
-	//if (!CStringUtils::IsValidPassword(pLoginMsg->password()))
-	//{
-	//	errorMessage.set_desc("password invalid");
-	//	errorMessage.set_loginresult(nd::user::ERROR_CODE::ILLEGAL_PARAM);
-	//	return false;
-	//}
+	if (!CStringUtils::IsValidAccount(pLoginMsg->account()))
+	{
+		errorMessage.set_desc("account invalid");
+		errorMessage.set_loginresult(zhu::user::ERROR_CODE::ILLEGAL_PARAM);
+		return false;
+	}
+	if (!CStringUtils::IsValidPassword(pLoginMsg->password()))
+	{
+		errorMessage.set_desc("password invalid");
+		errorMessage.set_loginresult(zhu::user::ERROR_CODE::ILLEGAL_PARAM);
+		return false;
+	}
 	return true;
 }
 
@@ -261,7 +260,7 @@ void zhu::CUserMgr::Logout(int iSocket, LOGOUT_PTR logoutReq)
 	pPayload->set_type_name(pLogoutResp->GetTypeName());
 	pPayload->add_socket(iSocket);
 
-	if (!CUserDao::Instance().IsExist(logoutReq->account()))
+	if (!CUserDao::Instance().IsExist(logoutReq->account().c_str()))
 	{
 		pLogoutResp->set_logoutresult(zhu::user::ERROR_CODE::ACCOUNT_NOT_EXIST);
 		logger_error("account {} not found", logoutReq->account());
@@ -271,7 +270,7 @@ void zhu::CUserMgr::Logout(int iSocket, LOGOUT_PTR logoutReq)
 	}
 
 	// 修改账号状态
-	//CUserDao::Instance().ChangeAccountStatus(logoutReq->account(), zhu::user::UserStatus::OFFLINE);
+	CUserDao::Instance().ChangeAccountStatus(logoutReq->account().c_str(), zhu::user::UserStatus::OFFLINE);
 	// 移除在线用户
 	m_mapPlayers.erase(logoutReq->id());
 	pLogoutResp->set_logoutresult(zhu::user::ERROR_CODE::SUCCESS);
@@ -279,27 +278,27 @@ void zhu::CUserMgr::Logout(int iSocket, LOGOUT_PTR logoutReq)
 	pPayload->set_message_data(pLogoutResp->SerializeAsString());
 	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
-	//// 通知其他在线用户该用户下线
-	//if (m_mapPlayers.size() > 0)
-	//{
-	//	std::shared_ptr<nd::SelfDescribingMessage> pNotifyPayload(NEW_ND nd::SelfDescribingMessage());
-	//	std::shared_ptr<nd::user::OnlineOfflineNotify> pOnlineNotify(NEW_ND nd::user::OnlineOfflineNotify());
-	//	pNotifyPayload->set_type_name(pOnlineNotify->GetTypeName());
-	//	for each (auto player in m_mapPlayers)
-	//	{
-	//		if (player.second->socket() != iSocket)
-	//		{
-	//			pNotifyPayload->add_socket(player.second->socket());
-	//		}
-	//	}
-	//	pOnlineNotify->set_account(logoutReq->account());
-	//	pOnlineNotify->set_online(false);
-	//	pNotifyPayload->set_message_data(pOnlineNotify->SerializeAsString());
-	//	CMsgMgr::getInstance().insertResponseMsg(pNotifyPayload);
-	//}
+	// 通知其他在线用户该用户下线
+	if (m_mapPlayers.size() > 0)
+	{
+		std::shared_ptr<zhu::SelfDescribingMessage> pNotifyPayload(NEW_ND zhu::SelfDescribingMessage());
+		std::shared_ptr<zhu::user::OnlineOfflineNotify> pOnlineNotify(NEW_ND zhu::user::OnlineOfflineNotify());
+		pNotifyPayload->set_type_name(pOnlineNotify->GetTypeName());
+		for each (auto player in m_mapPlayers)
+		{
+			if (player.second->socket() != iSocket)
+			{
+				pNotifyPayload->add_socket(player.second->socket());
+			}
+		}
+		pOnlineNotify->set_account(logoutReq->account());
+		pOnlineNotify->set_online(false);
+		pNotifyPayload->set_message_data(pOnlineNotify->SerializeAsString());
+		CMsgMgr::getInstance().insertResponseMsg(pNotifyPayload);
+	}
 
-	//// 发送用户下线通知给其他模块
-	//NotifyUserListenners(logoutReq->account(), false);
+	// 发送用户下线通知给其他模块
+	NotifyUserListenners(logoutReq->account(), false);
 }
 
 void zhu::CUserMgr::ConnectionClosed(SocketLib::DataSocket sock)
@@ -322,27 +321,27 @@ void zhu::CUserMgr::ConnectionClosed(SocketLib::DataSocket sock)
 
 	if (pOffLineUser.get() != NULL)
 	{
-		//// 通知其他在线用户该用户下线
-		//if (m_mapPlayers.size() > 0)
-		//{
-		//	std::shared_ptr<nd::SelfDescribingMessage> pNotifyPayload(NEW_ND nd::SelfDescribingMessage());
-		//	std::shared_ptr<nd::user::OnlineOfflineNotify> pOfflineNotify(NEW_ND nd::user::OnlineOfflineNotify());
-		//	pNotifyPayload->set_type_name(pOfflineNotify->GetTypeName());
-		//	for each (auto player in m_mapPlayers)
-		//	{
-		//		if (player.second->socket() != sock.GetSock())
-		//		{
-		//			pNotifyPayload->add_socket(player.second->socket());
-		//		}
-		//	}
-		//	pOfflineNotify->set_account(pOffLineUser->account());
-		//	pOfflineNotify->set_online(false);
-		//	pNotifyPayload->set_message_data(pOfflineNotify->SerializeAsString());
-		//	CMsgMgr::getInstance().insertResponseMsg(pNotifyPayload);
-		//}
+		// 通知其他在线用户该用户下线
+		if (m_mapPlayers.size() > 0)
+		{
+			std::shared_ptr<zhu::SelfDescribingMessage> pNotifyPayload(NEW_ND zhu::SelfDescribingMessage());
+			std::shared_ptr<zhu::user::OnlineOfflineNotify> pOfflineNotify(NEW_ND zhu::user::OnlineOfflineNotify());
+			pNotifyPayload->set_type_name(pOfflineNotify->GetTypeName());
+			for each (auto player in m_mapPlayers)
+			{
+				if (player.second->socket() != sock.GetSock())
+				{
+					pNotifyPayload->add_socket(player.second->socket());
+				}
+			}
+			pOfflineNotify->set_account(pOffLineUser->account());
+			pOfflineNotify->set_online(false);
+			pNotifyPayload->set_message_data(pOfflineNotify->SerializeAsString());
+			CMsgMgr::getInstance().insertResponseMsg(pNotifyPayload);
+		}
 
-		//// 发送用户下线通知给其他模块
-		//NotifyUserListenners(pOffLineUser->account(), false);
+		// 发送用户下线通知给其他模块
+		NotifyUserListenners(pOffLineUser->account(), false);
 
 		logger_info("user {} connection {}:{} closed, remove online player", pOffLineUser->account(),
 			SocketLib::GetIPString(sock.GetLocalAddress()), sock.GetRemotePort());

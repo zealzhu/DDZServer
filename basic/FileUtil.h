@@ -42,7 +42,7 @@ namespace basic
 
 			configMap["db.ip"] = reader.Get("db", "db.ip", "127.0.0.1");
 			configMap["db.port"] = reader.Get("db", "db.port", "3306");
-			configMap["db.dbname"] = reader.Get("db", "db.dbname", "game");
+			configMap["db.name"] = reader.Get("db", "db.name", "ddz");
 			configMap["db.maxpoolsize"] = reader.Get("db", "db.maxpoolsize", "10");
 			configMap["db.idle.check.interval"] = reader.Get("db", "db.idle.check.interval", "10");
 

@@ -266,10 +266,10 @@ class Seat : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
 
   // accessors -------------------------------------------------------
 
-  // optional bytes playerAccount = 3;
+  // optional bytes playerAccount = 4;
   bool has_playeraccount() const;
   void clear_playeraccount();
-  static const int kPlayerAccountFieldNumber = 3;
+  static const int kPlayerAccountFieldNumber = 4;
   const ::std::string& playeraccount() const;
   void set_playeraccount(const ::std::string& value);
   #if LANG_CXX11
@@ -281,10 +281,17 @@ class Seat : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
   ::std::string* release_playeraccount();
   void set_allocated_playeraccount(::std::string* playeraccount);
 
-  // optional int32 socket = 2;
+  // required uint32 position = 2;
+  bool has_position() const;
+  void clear_position();
+  static const int kPositionFieldNumber = 2;
+  ::google::protobuf::uint32 position() const;
+  void set_position(::google::protobuf::uint32 value);
+
+  // optional int32 socket = 3;
   bool has_socket() const;
   void clear_socket();
-  static const int kSocketFieldNumber = 2;
+  static const int kSocketFieldNumber = 3;
   ::google::protobuf::int32 socket() const;
   void set_socket(::google::protobuf::int32 value);
 
@@ -299,15 +306,21 @@ class Seat : public ::google::protobuf::Message /* @@protoc_insertion_point(clas
  private:
   void set_has_statu();
   void clear_has_statu();
+  void set_has_position();
+  void clear_has_position();
   void set_has_socket();
   void clear_has_socket();
   void set_has_playeraccount();
   void clear_has_playeraccount();
 
+  // helper for ByteSizeLong()
+  size_t RequiredFieldsByteSizeFallback() const;
+
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr playeraccount_;
+  ::google::protobuf::uint32 position_;
   ::google::protobuf::int32 socket_;
   int statu_;
   friend struct protobuf_room_2eproto::TableStruct;
@@ -1078,10 +1091,10 @@ class EnterRoomResp : public ::google::protobuf::Message /* @@protoc_insertion_p
 
   // accessors -------------------------------------------------------
 
-  // optional bytes desc = 2;
+  // optional bytes desc = 3;
   bool has_desc() const;
   void clear_desc();
-  static const int kDescFieldNumber = 2;
+  static const int kDescFieldNumber = 3;
   const ::std::string& desc() const;
   void set_desc(const ::std::string& value);
   #if LANG_CXX11
@@ -1093,6 +1106,15 @@ class EnterRoomResp : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::std::string* release_desc();
   void set_allocated_desc(::std::string* desc);
 
+  // optional .zhu.room.Room roomInfo = 2;
+  bool has_roominfo() const;
+  void clear_roominfo();
+  static const int kRoomInfoFieldNumber = 2;
+  const ::zhu::room::Room& roominfo() const;
+  ::zhu::room::Room* mutable_roominfo();
+  ::zhu::room::Room* release_roominfo();
+  void set_allocated_roominfo(::zhu::room::Room* roominfo);
+
   // required .zhu.room.ERROR_CODE enterResult = 1;
   bool has_enterresult() const;
   void clear_enterresult();
@@ -1100,10 +1122,10 @@ class EnterRoomResp : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::zhu::room::ERROR_CODE enterresult() const;
   void set_enterresult(::zhu::room::ERROR_CODE value);
 
-  // optional uint32 position = 3;
+  // optional uint32 position = 4;
   bool has_position() const;
   void clear_position();
-  static const int kPositionFieldNumber = 3;
+  static const int kPositionFieldNumber = 4;
   ::google::protobuf::uint32 position() const;
   void set_position(::google::protobuf::uint32 value);
 
@@ -1111,6 +1133,8 @@ class EnterRoomResp : public ::google::protobuf::Message /* @@protoc_insertion_p
  private:
   void set_has_enterresult();
   void clear_has_enterresult();
+  void set_has_roominfo();
+  void clear_has_roominfo();
   void set_has_desc();
   void clear_has_desc();
   void set_has_position();
@@ -1120,6 +1144,7 @@ class EnterRoomResp : public ::google::protobuf::Message /* @@protoc_insertion_p
   ::google::protobuf::internal::HasBits<1> _has_bits_;
   mutable int _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr desc_;
+  ::zhu::room::Room* roominfo_;
   int enterresult_;
   ::google::protobuf::uint32 position_;
   friend struct protobuf_room_2eproto::TableStruct;
@@ -1558,10 +1583,10 @@ class ReadyResp : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::std::string* release_account();
   void set_allocated_account(::std::string* account);
 
-  // optional bytes desc = 4;
+  // optional bytes desc = 5;
   bool has_desc() const;
   void clear_desc();
-  static const int kDescFieldNumber = 4;
+  static const int kDescFieldNumber = 5;
   const ::std::string& desc() const;
   void set_desc(const ::std::string& value);
   #if LANG_CXX11
@@ -1580,10 +1605,17 @@ class ReadyResp : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::zhu::room::ERROR_CODE readyresult() const;
   void set_readyresult(::zhu::room::ERROR_CODE value);
 
-  // optional bool ready = 3;
+  // optional uint32 position = 3;
+  bool has_position() const;
+  void clear_position();
+  static const int kPositionFieldNumber = 3;
+  ::google::protobuf::uint32 position() const;
+  void set_position(::google::protobuf::uint32 value);
+
+  // optional bool ready = 4;
   bool has_ready() const;
   void clear_ready();
-  static const int kReadyFieldNumber = 3;
+  static const int kReadyFieldNumber = 4;
   bool ready() const;
   void set_ready(bool value);
 
@@ -1593,6 +1625,8 @@ class ReadyResp : public ::google::protobuf::Message /* @@protoc_insertion_point
   void clear_has_readyresult();
   void set_has_account();
   void clear_has_account();
+  void set_has_position();
+  void clear_has_position();
   void set_has_ready();
   void clear_has_ready();
   void set_has_desc();
@@ -1604,6 +1638,7 @@ class ReadyResp : public ::google::protobuf::Message /* @@protoc_insertion_point
   ::google::protobuf::internal::ArenaStringPtr account_;
   ::google::protobuf::internal::ArenaStringPtr desc_;
   int readyresult_;
+  ::google::protobuf::uint32 position_;
   bool ready_;
   friend struct protobuf_room_2eproto::TableStruct;
 };
@@ -1991,13 +2026,13 @@ class RoomGameStatuChangeNotify : public ::google::protobuf::Message /* @@protoc
 
 // required .zhu.room.Seat.SeatStatus statu = 1 [default = NO_PLAYER];
 inline bool Seat::has_statu() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void Seat::set_has_statu() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void Seat::clear_has_statu() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void Seat::clear_statu() {
   statu_ = 2;
@@ -2014,15 +2049,39 @@ inline void Seat::set_statu(::zhu::room::Seat_SeatStatus value) {
   // @@protoc_insertion_point(field_set:zhu.room.Seat.statu)
 }
 
-// optional int32 socket = 2;
-inline bool Seat::has_socket() const {
+// required uint32 position = 2;
+inline bool Seat::has_position() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Seat::set_has_socket() {
+inline void Seat::set_has_position() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Seat::clear_has_socket() {
+inline void Seat::clear_has_position() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void Seat::clear_position() {
+  position_ = 0u;
+  clear_has_position();
+}
+inline ::google::protobuf::uint32 Seat::position() const {
+  // @@protoc_insertion_point(field_get:zhu.room.Seat.position)
+  return position_;
+}
+inline void Seat::set_position(::google::protobuf::uint32 value) {
+  set_has_position();
+  position_ = value;
+  // @@protoc_insertion_point(field_set:zhu.room.Seat.position)
+}
+
+// optional int32 socket = 3;
+inline bool Seat::has_socket() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Seat::set_has_socket() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Seat::clear_has_socket() {
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void Seat::clear_socket() {
   socket_ = 0;
@@ -2038,7 +2097,7 @@ inline void Seat::set_socket(::google::protobuf::int32 value) {
   // @@protoc_insertion_point(field_set:zhu.room.Seat.socket)
 }
 
-// optional bytes playerAccount = 3;
+// optional bytes playerAccount = 4;
 inline bool Seat::has_playeraccount() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2718,13 +2777,13 @@ inline void EnterRoomReq::set_roomid(::google::protobuf::uint32 value) {
 
 // required .zhu.room.ERROR_CODE enterResult = 1;
 inline bool EnterRoomResp::has_enterresult() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void EnterRoomResp::set_has_enterresult() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void EnterRoomResp::clear_has_enterresult() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void EnterRoomResp::clear_enterresult() {
   enterresult_ = 0;
@@ -2741,7 +2800,52 @@ inline void EnterRoomResp::set_enterresult(::zhu::room::ERROR_CODE value) {
   // @@protoc_insertion_point(field_set:zhu.room.EnterRoomResp.enterResult)
 }
 
-// optional bytes desc = 2;
+// optional .zhu.room.Room roomInfo = 2;
+inline bool EnterRoomResp::has_roominfo() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void EnterRoomResp::set_has_roominfo() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void EnterRoomResp::clear_has_roominfo() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void EnterRoomResp::clear_roominfo() {
+  if (roominfo_ != NULL) roominfo_->::zhu::room::Room::Clear();
+  clear_has_roominfo();
+}
+inline const ::zhu::room::Room& EnterRoomResp::roominfo() const {
+  // @@protoc_insertion_point(field_get:zhu.room.EnterRoomResp.roomInfo)
+  return roominfo_ != NULL ? *roominfo_
+                         : *::zhu::room::Room::internal_default_instance();
+}
+inline ::zhu::room::Room* EnterRoomResp::mutable_roominfo() {
+  set_has_roominfo();
+  if (roominfo_ == NULL) {
+    roominfo_ = new ::zhu::room::Room;
+  }
+  // @@protoc_insertion_point(field_mutable:zhu.room.EnterRoomResp.roomInfo)
+  return roominfo_;
+}
+inline ::zhu::room::Room* EnterRoomResp::release_roominfo() {
+  // @@protoc_insertion_point(field_release:zhu.room.EnterRoomResp.roomInfo)
+  clear_has_roominfo();
+  ::zhu::room::Room* temp = roominfo_;
+  roominfo_ = NULL;
+  return temp;
+}
+inline void EnterRoomResp::set_allocated_roominfo(::zhu::room::Room* roominfo) {
+  delete roominfo_;
+  roominfo_ = roominfo;
+  if (roominfo) {
+    set_has_roominfo();
+  } else {
+    clear_has_roominfo();
+  }
+  // @@protoc_insertion_point(field_set_allocated:zhu.room.EnterRoomResp.roomInfo)
+}
+
+// optional bytes desc = 3;
 inline bool EnterRoomResp::has_desc() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2804,15 +2908,15 @@ inline void EnterRoomResp::set_allocated_desc(::std::string* desc) {
   // @@protoc_insertion_point(field_set_allocated:zhu.room.EnterRoomResp.desc)
 }
 
-// optional uint32 position = 3;
+// optional uint32 position = 4;
 inline bool EnterRoomResp::has_position() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void EnterRoomResp::set_has_position() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void EnterRoomResp::clear_has_position() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void EnterRoomResp::clear_position() {
   position_ = 0u;
@@ -3239,15 +3343,39 @@ inline void ReadyResp::set_allocated_account(::std::string* account) {
   // @@protoc_insertion_point(field_set_allocated:zhu.room.ReadyResp.account)
 }
 
-// optional bool ready = 3;
-inline bool ReadyResp::has_ready() const {
+// optional uint32 position = 3;
+inline bool ReadyResp::has_position() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void ReadyResp::set_has_ready() {
+inline void ReadyResp::set_has_position() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void ReadyResp::clear_has_ready() {
+inline void ReadyResp::clear_has_position() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void ReadyResp::clear_position() {
+  position_ = 0u;
+  clear_has_position();
+}
+inline ::google::protobuf::uint32 ReadyResp::position() const {
+  // @@protoc_insertion_point(field_get:zhu.room.ReadyResp.position)
+  return position_;
+}
+inline void ReadyResp::set_position(::google::protobuf::uint32 value) {
+  set_has_position();
+  position_ = value;
+  // @@protoc_insertion_point(field_set:zhu.room.ReadyResp.position)
+}
+
+// optional bool ready = 4;
+inline bool ReadyResp::has_ready() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ReadyResp::set_has_ready() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ReadyResp::clear_has_ready() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void ReadyResp::clear_ready() {
   ready_ = false;
@@ -3263,7 +3391,7 @@ inline void ReadyResp::set_ready(bool value) {
   // @@protoc_insertion_point(field_set:zhu.room.ReadyResp.ready)
 }
 
-// optional bytes desc = 4;
+// optional bytes desc = 5;
 inline bool ReadyResp::has_desc() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }

@@ -1,26 +1,26 @@
 ﻿#include "RoomMgr.h"
 #include "../../message/MsgMgr.h"
 
-void zhu::CRoomMgr::HandleMsg(std::shared_ptr<nd::SelfDescribingMessage> pMsg)
+void zhu::CRoomMgr::HandleMsg(std::shared_ptr<zhu::SelfDescribingMessage> pMsg)
 {
 	// 解析消息正文
 	CProtobuf::ErrorCode pErrorCode;
 	MessagePtr pInnerMsg = CProtobuf::parseInnerMsg(pMsg, pErrorCode);
 
 	// 解析出错
-	if (nd::CProtobuf::ErrorCode::UNKNOWN_MESSAGE_TYPE == pErrorCode || nd::CProtobuf::ErrorCode::PARSE_ERROR == pErrorCode)
+	if (zhu::CProtobuf::ErrorCode::UNKNOWN_MESSAGE_TYPE == pErrorCode || zhu::CProtobuf::ErrorCode::PARSE_ERROR == pErrorCode)
 	{
 		logger_error("CProtobuf parseInnerMsg failed");
 		// 创建一条消息
-		std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+		std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 		// 设置客户端地址
 		pPayload->add_socket(pMsg->socket(0));
 		// 创建错误信息
-		std::shared_ptr<nd::ErrorMessage> pErrorMessage(NEW_ND nd::ErrorMessage());
+		std::shared_ptr<zhu::ErrorMessage> pErrorMessage(NEW_ND zhu::ErrorMessage());
 		pErrorMessage->set_desc("erro from server parse");
 		pPayload->set_message_data(pErrorMessage->SerializeAsString());
 		pPayload->set_type_name(pErrorMessage->GetTypeName());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -166,7 +166,7 @@ void zhu::CRoomMgr::NotifyRoomListennersRoomCreate(const int iRoomNumber)
 void zhu::CRoomMgr::Create(int iSocket, CREATE_ROOM_PTR pCreateRoomMsg)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<zhu::room::CreateRoomResp> pCreateRoomResult(NEW_ND zhu::room::CreateRoomResp());
 	pPayload->set_type_name(pCreateRoomResult->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -177,7 +177,7 @@ void zhu::CRoomMgr::Create(int iSocket, CREATE_ROOM_PTR pCreateRoomMsg)
 		pCreateRoomResult->set_desc("the room is full!");
 		logger_error("{}", pCreateRoomResult->desc());
 		pPayload->set_message_data(pCreateRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -187,7 +187,7 @@ void zhu::CRoomMgr::Create(int iSocket, CREATE_ROOM_PTR pCreateRoomMsg)
 		pCreateRoomResult->set_desc("player has in a room, please exit first!");
 		logger_error("{}", pCreateRoomResult->desc());
 		pPayload->set_message_data(pCreateRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -209,7 +209,7 @@ void zhu::CRoomMgr::Create(int iSocket, CREATE_ROOM_PTR pCreateRoomMsg)
 	// 使用 pCreateRoomResult->set_allocated_createroom(pRoom.get()) 后会把内存释放掉
 	pCreateRoomResult->mutable_createroom()->CopyFrom(*pRoom.get());
 	pPayload->set_message_data(pCreateRoomResult->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 	// 通知其他模块房间数量改变
 	NotifyRoomListennersRoomNumberChange(m_mapRooms.size());
@@ -220,7 +220,7 @@ void zhu::CRoomMgr::Create(int iSocket, CREATE_ROOM_PTR pCreateRoomMsg)
 void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<zhu::room::EnterRoomResp> pEnterRoomResult(NEW_ND zhu::room::EnterRoomResp());
 	pPayload->set_type_name(pEnterRoomResult->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -231,7 +231,7 @@ void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
 		pEnterRoomResult->set_desc("the room is not exist");
 		logger_error("{}", pEnterRoomResult->desc());
 		pPayload->set_message_data(pEnterRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -243,7 +243,7 @@ void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
 		pEnterRoomResult->set_desc("the room's user is full");
 		logger_error("{}", pEnterRoomResult->desc());
 		pPayload->set_message_data(pEnterRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -254,22 +254,25 @@ void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
 		pEnterRoomResult->set_desc("player has in room");
 		logger_error("{}", pEnterRoomResult->desc());
 		pPayload->set_message_data(pEnterRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
-
+	pEnterRoomResult->roominfo().id();
 	// 进入房间入座
 	int iPosition;
 	if ((iPosition = Seating(pRoom, pEnterRoomMsg->account(), iSocket)) != 0) {
 		pEnterRoomResult->set_enterresult(zhu::room::ERROR_CODE::SUCCESS);
 		pEnterRoomResult->set_position(iPosition);
+		auto roomInfo = pEnterRoomResult->mutable_roominfo();
+		roomInfo->CopyFrom(*pRoom.get());
 		logger_info("{} enter room {} success and seat in position {}", 
 			pEnterRoomMsg->account(), pEnterRoomMsg->roomid(), iPosition);
 		pPayload->set_message_data(pEnterRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 		// 通知房间人数改变
 		NotifyRoomListennersUserCountChange(pEnterRoomMsg->roomid(), pRoom->usercount());
+		SendOtherPlayerStatuChange(pRoom, iPosition);
 
 		return;
 	}
@@ -279,7 +282,7 @@ void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
 		pEnterRoomResult->set_desc("the room's user is full");
 		logger_error("{}", pEnterRoomResult->desc());
 		pPayload->set_message_data(pEnterRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 }
@@ -287,7 +290,7 @@ void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
 void zhu::CRoomMgr::Leave(int iSocket, LEAVE_ROOM_PTR pLeaveRoomMsg)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<zhu::room::LeaveRoomResp> pLeaveRoomResult(NEW_ND zhu::room::LeaveRoomResp());
 	pPayload->set_type_name(pLeaveRoomResult->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -297,20 +300,22 @@ void zhu::CRoomMgr::Leave(int iSocket, LEAVE_ROOM_PTR pLeaveRoomMsg)
 		pLeaveRoomResult->set_leaveroomresult(zhu::room::ERROR_CODE::ROOM_NOT_EXIST);
 		logger_error("{}", "the room is not exist");
 		pPayload->set_message_data(pLeaveRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
 	ROOM_PTR pRoom = m_mapRooms[pLeaveRoomMsg->roomid()];
 	zhu::room::Seat* pSeat = NULL;
+	int iPosition;
 	// 用户不在房间中
 	if ((pSeat = CheckPlayerInRoom(pRoom, pLeaveRoomMsg->account())) == NULL) {
 		pLeaveRoomResult->set_leaveroomresult(zhu::room::ERROR_CODE::PLAYER_NOT_IN_ROOM);
 		logger_error("{}", "player not in room");
 		pPayload->set_message_data(pLeaveRoomResult->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
+	iPosition = pSeat->position();
 	
 	// 离开房间
 	pSeat->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
@@ -318,14 +323,16 @@ void zhu::CRoomMgr::Leave(int iSocket, LEAVE_ROOM_PTR pLeaveRoomMsg)
 	pSeat->set_socket(-1);
 	pRoom->set_usercount(pRoom->usercount() - 1);
 	
-	// 判断房间还有没有人,没人就关掉了
-	CheckRoomShouldBeClose(pRoom);
+	// 判断房间还有没有人,没人就关掉了，否则通知其他人玩家退出房间
+	if (!CheckRoomShouldBeClose(pRoom)) {
+		SendOtherPlayerStatuChange(pRoom, iPosition);
+	}
 	
 	// 成功消息
 	pLeaveRoomResult->set_leaveroomresult(zhu::room::ERROR_CODE::SUCCESS);
 	logger_info("{} leave room {} success", pLeaveRoomMsg->account(), pLeaveRoomMsg->roomid());
 	pPayload->set_message_data(pLeaveRoomResult->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 	// 通知房间人数改变
 	NotifyRoomListennersUserCountChange(pLeaveRoomMsg->roomid(), pRoom->usercount());
@@ -334,7 +341,7 @@ void zhu::CRoomMgr::Leave(int iSocket, LEAVE_ROOM_PTR pLeaveRoomMsg)
 void zhu::CRoomMgr::Get(int iSocket, GET_ROOM_PTR pGetRoomMsg)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<zhu::room::GetRoomResp> pGetRoomResp(NEW_ND zhu::room::GetRoomResp());
 	pPayload->set_type_name(pGetRoomResp->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -354,13 +361,13 @@ void zhu::CRoomMgr::Get(int iSocket, GET_ROOM_PTR pGetRoomMsg)
 	// 发送响应消息
 	logger_info("get {} room", m_mapRooms.size());
 	pPayload->set_message_data(pGetRoomResp->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 }
 
 void zhu::CRoomMgr::Ready(int iSocket, READY_PTR pReadyReq)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<zhu::room::ReadyResp> pReadyResp(NEW_ND zhu::room::ReadyResp());
 	pPayload->set_type_name(pReadyResp->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -375,7 +382,7 @@ void zhu::CRoomMgr::Ready(int iSocket, READY_PTR pReadyReq)
 		pReadyResp->set_desc("player not in room");
 		logger_error("{}", pReadyResp->desc());
 		pPayload->set_message_data(pReadyResp->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 
@@ -385,7 +392,7 @@ void zhu::CRoomMgr::Ready(int iSocket, READY_PTR pReadyReq)
 		pReadyResp->set_desc("player has ready");
 		logger_error("{}", "has ready");
 		pPayload->set_message_data(pReadyResp->SerializeAsString());
-		CMsgMgr::Instance().InsertResponseMsg(pPayload);
+		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 		return;
 	}
 	
@@ -394,10 +401,11 @@ void zhu::CRoomMgr::Ready(int iSocket, READY_PTR pReadyReq)
 	pReadyResp->set_readyresult(zhu::room::ERROR_CODE::SUCCESS);
 	pReadyResp->set_account(pReadyReq->account());
 	pReadyResp->set_ready(true);
+	pReadyResp->set_position(pSeat->position());
 	pReadyResp->set_desc("player ready");
 	logger_info("{} {}", pReadyReq->account(), " ready");
 	pPayload->set_message_data(pReadyResp->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 	// 全部准备则通知游戏开始
 	if (CheckAllPlayerIsReady(pRoom)) {
@@ -411,27 +419,63 @@ void zhu::CRoomMgr::Ready(int iSocket, READY_PTR pReadyReq)
 	}
 }
 
-void zhu::CRoomMgr::SendReadyToOtherPlayer(int iSocket, string strAccount, bool bReady)
+void checkSend(const zhu::room::Seat & pSeat, int iSock, zhu::SelfDescribingMessage * msg) {
+	if (pSeat.statu() != zhu::room::Seat::NO_PLAYER)
+		msg->add_socket(iSock);
+}
+
+void zhu::CRoomMgr::SendOtherPlayerStatuChange(ROOM_PTR pRoom, int iSeat)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
+	std::shared_ptr<zhu::room::Seat> pSeatMsg(NEW_ND zhu::room::Seat());
+	pPayload->set_type_name(pSeatMsg->GetTypeName());
+
+	if (iSeat == 1) 
+	{
+		pSeatMsg->CopyFrom(pRoom->seat1());
+		checkSend(pRoom->seat2(), pRoom->seat2().socket(), pPayload.get());
+		checkSend(pRoom->seat3(), pRoom->seat3().socket(), pPayload.get());
+	}
+	else if (iSeat == 2)
+	{
+		pSeatMsg->CopyFrom(pRoom->seat2());
+		checkSend(pRoom->seat1(), pRoom->seat1().socket(), pPayload.get());
+		checkSend(pRoom->seat3(), pRoom->seat3().socket(), pPayload.get());
+	}
+	else if (iSeat == 3)
+	{
+		pSeatMsg->CopyFrom(pRoom->seat3());
+		checkSend(pRoom->seat2(), pRoom->seat2().socket(), pPayload.get());
+		checkSend(pRoom->seat1(), pRoom->seat1().socket(), pPayload.get());
+	}
+	logger_info("send playerenter room {} to other", pRoom->roomname());
+	pPayload->set_message_data(pSeatMsg->SerializeAsString());
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
+}
+
+void zhu::CRoomMgr::SendReadyToOtherPlayer(int iSocket, int iSeat, string strAccount, bool bReady)
+{
+	// 创建响应消息
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<zhu::room::ReadyResp> pReadyResp(NEW_ND zhu::room::ReadyResp());
 	pPayload->set_type_name(pReadyResp->GetTypeName());
 	pPayload->add_socket(iSocket);
 
 	pReadyResp->set_readyresult(zhu::room::ERROR_CODE::SUCCESS);
+	pReadyResp->set_position(iSeat);
 	pReadyResp->set_account(strAccount);
 	pReadyResp->set_ready(bReady);
 	pReadyResp->set_desc("player ready");
 	logger_info("send {} ready to other player", strAccount);
 	pPayload->set_message_data(pReadyResp->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 }
 
 void zhu::CRoomMgr::Start(int iSocket, int iRoomId)
 {
 	// 创建响应消息
-	std::shared_ptr<nd::SelfDescribingMessage> pPayload(NEW_ND nd::SelfDescribingMessage());
+	std::shared_ptr<zhu::SelfDescribingMessage> pPayload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<room::RoomGameStatuChangeNotify> pReadyResp(NEW_ND room::RoomGameStatuChangeNotify());
 	pPayload->set_type_name(pReadyResp->GetTypeName());
 	pPayload->add_socket(iSocket);
@@ -440,7 +484,7 @@ void zhu::CRoomMgr::Start(int iSocket, int iRoomId)
 	pReadyResp->set_start(true);
 	logger_info("room {} game start", iRoomId);
 	pPayload->set_message_data(pReadyResp->SerializeAsString());
-	CMsgMgr::Instance().InsertResponseMsg(pPayload);
+	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 }
 
 void zhu::CRoomMgr::GameOver(int iSocket, GAME_OVER_PTR pGameOverMsg)
@@ -480,11 +524,17 @@ int zhu::CRoomMgr::GenerateRoomId()
 
 void zhu::CRoomMgr::CreateSeat(ROOM_PTR pRoom)
 {
-	pRoom->mutable_seat1()->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
+	auto seat1 = pRoom->mutable_seat1();
+	seat1->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
+	seat1->set_position(1);
 
-	pRoom->mutable_seat2()->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
-	
-	pRoom->mutable_seat3()->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
+	auto seat2 = pRoom->mutable_seat2();
+	seat2->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
+	seat2->set_position(2);
+
+	auto seat3 = pRoom->mutable_seat3();
+	seat3->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
+	seat3->set_position(3);
 }
 
 int zhu::CRoomMgr::Seating(ROOM_PTR pRoom, string strAccount, int iSocket)
@@ -616,14 +666,14 @@ void zhu::CRoomMgr::SendReadyToOtherPlayer(ROOM_PTR pRoom, room::Seat* pSeat, st
 	zhu::room::Seat* seat2 = pRoom->mutable_seat2();
 	zhu::room::Seat* seat3 = pRoom->mutable_seat3();
 
-	if (seat1 != pSeat)
-		SendReadyToOtherPlayer(seat1->socket(), strAccount, bReady);
+	if (seat1 != pSeat && seat1->statu() != room::Seat::NO_PLAYER)
+		SendReadyToOtherPlayer(seat1->socket(), pSeat->position(), strAccount, bReady);
 
-	if (seat2 != pSeat)
-		SendReadyToOtherPlayer(seat2->socket(), strAccount, bReady);
+	if (seat2 != pSeat && seat2->statu() != room::Seat::NO_PLAYER)
+		SendReadyToOtherPlayer(seat2->socket(), pSeat->position(), strAccount, bReady);
 
-	if (seat3 != pSeat)
-		SendReadyToOtherPlayer(seat3->socket(), strAccount, bReady);
+	if (seat3 != pSeat && seat3->statu() != room::Seat::NO_PLAYER)
+		SendReadyToOtherPlayer(seat3->socket(), pSeat->position(), strAccount, bReady);
 }
 
 void zhu::CRoomMgr::SendStartToAllPlayer(ROOM_PTR pRoom)

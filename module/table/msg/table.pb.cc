@@ -98,10 +98,14 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, desc_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, account_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, next_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, nextposition_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, currentposition_),
   3,
   0,
   1,
   2,
+  4,
+  5,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordReq, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordReq, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -123,17 +127,21 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, calllandlordresult_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, desc_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, account_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, currentposition_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, call_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, type_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, nexttype_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, next_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordResp, nextposition_),
   3,
   0,
   1,
   4,
   5,
   6,
+  7,
   2,
+  8,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DispatchPoker, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DispatchPoker, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -142,9 +150,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DispatchPoker, pockers_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DispatchPoker, type_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DispatchPoker, landlordaccount_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DispatchPoker, position_),
   ~0u,
   1,
   0,
+  2,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerOut, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayerOut, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -161,11 +171,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
 static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 0, 8, sizeof(Poker)},
   { 11, 20, sizeof(PlayReq)},
-  { 24, 33, sizeof(PlayResp)},
-  { 37, 46, sizeof(RequestLandlordReq)},
-  { 50, 62, sizeof(RequestLandlordResp)},
-  { 69, 77, sizeof(DispatchPoker)},
-  { 80, 88, sizeof(PlayerOut)},
+  { 24, 35, sizeof(PlayResp)},
+  { 41, 50, sizeof(RequestLandlordReq)},
+  { 54, 68, sizeof(RequestLandlordResp)},
+  { 77, 86, sizeof(DispatchPoker)},
+  { 90, 98, sizeof(PlayerOut)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -243,52 +253,55 @@ void AddDescriptorsImpl() {
       ".zhu.table.POKER_SUIT\"p\n\007PlayReq\022\016\n\006room"
       "Id\030\001 \002(\r\022\017\n\007account\030\002 \002(\014\022\"\n\004type\030\003 \002(\0162"
       "\024.zhu.table.PLAY_TYPE\022 \n\006pokers\030\004 \003(\0132\020."
-      "zhu.table.Poker\"b\n\010PlayResp\022)\n\nplayResul"
-      "t\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014\n\004desc\030\002"
-      " \001(\014\022\017\n\007account\030\003 \001(\014\022\014\n\004next\030\004 \001(\014\"q\n\022R"
-      "equestLandlordReq\022\016\n\006roomId\030\001 \002(\r\022\017\n\007acc"
-      "ount\030\002 \002(\014\022\014\n\004call\030\003 \002(\010\022,\n\004type\030\004 \001(\0162\036"
-      ".zhu.table.RequestLandlordType\"\343\001\n\023Reque"
-      "stLandlordResp\0221\n\022callLandlordResult\030\001 \002"
-      "(\0162\025.zhu.table.ERROR_CODE\022\014\n\004desc\030\002 \001(\014\022"
-      "\017\n\007account\030\003 \001(\014\022\014\n\004call\030\004 \001(\010\022,\n\004type\030\005"
-      " \001(\0162\036.zhu.table.RequestLandlordType\0220\n\010"
-      "nextType\030\006 \001(\0162\036.zhu.table.RequestLandlo"
-      "rdType\022\014\n\004next\030\007 \001(\014\"w\n\rDispatchPoker\022!\n"
-      "\007pockers\030\001 \003(\0132\020.zhu.table.Poker\022*\n\004type"
-      "\030\002 \002(\0162\034.zhu.table.DispatchPokerType\022\027\n\017"
-      "landlordAccount\030\003 \001(\014\"V\n\tPlayerOut\022*\n\013er"
-      "rorResult\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014"
-      "\n\004desc\030\002 \001(\014\022\017\n\007account\030\003 \001(\014*[\n\nPOKER_S"
-      "UIT\022\t\n\005SPADE\020\000\022\t\n\005HEART\020\001\022\013\n\007DIAMOND\020\002\022\010"
-      "\n\004CLUB\020\003\022\020\n\014SMALL_JACKER\020\004\022\016\n\nBIG_JACKER"
-      "\020\005*\356\003\n\tPLAY_TYPE\022\021\n\rDOUBLE_JOCKER\020\000\022\010\n\004B"
-      "OMB\020\001\022\n\n\006SINGLE\020\002\022\017\n\013DOUBLE_SAME\020\003\022\016\n\nTH"
-      "REE_SAME\020\004\022\027\n\023THREE_SAME_WITH_ONE\020\005\022\027\n\023T"
-      "HREE_SAME_WITH_TWO\020\006\022\023\n\017SINGLE_STRAIGHT\020"
-      "\007\022\023\n\017DOUBLE_STRAIGHT\020\010\022\024\n\020BOMB_WIHT_SING"
-      "LE\020\t\022\024\n\020BOMB_WIHT_DOUBLE\020\n\022\r\n\tNO_PLAYER\020"
-      "\013\022\025\n\021DOUBLE_THREE_SAME\020\014\022!\n\035DOUBLE_THREE"
-      "_SAME_WITH_SINGLE\020\r\022!\n\035DOUBLE_THREE_SAME"
-      "_WITH_DOUBLE\020\016\022\024\n\020THREE_THREE_SAME\020\017\022 \n\034"
-      "THREE_THREE_SAME_WITH_SINGLE\020\020\022 \n\034THREE_"
-      "THREE_SAME_WITH_DOUBLE\020\021\022\023\n\017FOUR_THREE_S"
-      "AME\020\022\022\037\n\033FOUR_THREE_SAME_WITH_SINGLE\020\023\022\023"
-      "\n\017FIVE_THREE_SAME\020\024*\253\002\n\nERROR_CODE\022\013\n\007SU"
-      "CCESS\020\000\022\026\n\022NO_TURN_TO_REQUEST\020\001\022\023\n\017PLAY_"
-      "TYPE_ERROR\020\002\022\020\n\014COMPARE_LOSE\020\003\022\013\n\007NO_PLA"
-      "Y\020\004\022\031\n\025CAN_NOT_CALL_LANDLORD\020\005\022\030\n\024NO_ONE"
-      "_CALL_LANDLORD\020\006\022\031\n\025NOT_SELECTED_LANDLOR"
-      "D\020\007\022\025\n\021SELECTED_LANDLORD\020\010\022\020\n\014LANDLORD_W"
-      "IN\020\t\022\017\n\013PEASANT_WIN\020\n\022\023\n\017CAN_NOT_NO_PLAY"
-      "\020\013\022\023\n\017PLAYER_OUT_GAME\020\014\022\020\n\014SERVER_ERROR\020"
-      "\r*)\n\023RequestLandlordType\022\010\n\004RUSH\020\000\022\010\n\004CA"
-      "LL\020\001*\\\n\021DispatchPokerType\022\016\n\nDEAL_POKER\020"
-      "\000\022\022\n\016LANDLORD_POKER\020\001\022\021\n\rCURRENT_POKER\020\002"
-      "\022\020\n\014PLAYER_POKER\020\003"
+      "zhu.table.Poker\"\221\001\n\010PlayResp\022)\n\nplayResu"
+      "lt\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014\n\004desc\030"
+      "\002 \001(\014\022\017\n\007account\030\003 \001(\014\022\014\n\004next\030\004 \001(\014\022\024\n\014"
+      "nextPosition\030\005 \001(\r\022\027\n\017currentPosition\030\006 "
+      "\001(\r\"q\n\022RequestLandlordReq\022\016\n\006roomId\030\001 \002("
+      "\r\022\017\n\007account\030\002 \002(\014\022\014\n\004call\030\003 \002(\010\022,\n\004type"
+      "\030\004 \001(\0162\036.zhu.table.RequestLandlordType\"\222"
+      "\002\n\023RequestLandlordResp\0221\n\022callLandlordRe"
+      "sult\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014\n\004des"
+      "c\030\002 \001(\014\022\017\n\007account\030\003 \001(\014\022\027\n\017currentPosit"
+      "ion\030\004 \001(\r\022\014\n\004call\030\005 \001(\010\022,\n\004type\030\006 \001(\0162\036."
+      "zhu.table.RequestLandlordType\0220\n\010nextTyp"
+      "e\030\007 \001(\0162\036.zhu.table.RequestLandlordType\022"
+      "\014\n\004next\030\010 \001(\014\022\024\n\014nextPosition\030\t \001(\r\"\211\001\n\r"
+      "DispatchPoker\022!\n\007pockers\030\001 \003(\0132\020.zhu.tab"
+      "le.Poker\022*\n\004type\030\002 \002(\0162\034.zhu.table.Dispa"
+      "tchPokerType\022\027\n\017landlordAccount\030\003 \001(\014\022\020\n"
+      "\010position\030\004 \001(\r\"V\n\tPlayerOut\022*\n\013errorRes"
+      "ult\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014\n\004desc"
+      "\030\002 \001(\014\022\017\n\007account\030\003 \001(\014*[\n\nPOKER_SUIT\022\t\n"
+      "\005SPADE\020\000\022\t\n\005HEART\020\001\022\013\n\007DIAMOND\020\002\022\010\n\004CLUB"
+      "\020\003\022\020\n\014SMALL_JACKER\020\004\022\016\n\nBIG_JACKER\020\005*\356\003\n"
+      "\tPLAY_TYPE\022\021\n\rDOUBLE_JOCKER\020\000\022\010\n\004BOMB\020\001\022"
+      "\n\n\006SINGLE\020\002\022\017\n\013DOUBLE_SAME\020\003\022\016\n\nTHREE_SA"
+      "ME\020\004\022\027\n\023THREE_SAME_WITH_ONE\020\005\022\027\n\023THREE_S"
+      "AME_WITH_TWO\020\006\022\023\n\017SINGLE_STRAIGHT\020\007\022\023\n\017D"
+      "OUBLE_STRAIGHT\020\010\022\024\n\020BOMB_WIHT_SINGLE\020\t\022\024"
+      "\n\020BOMB_WIHT_DOUBLE\020\n\022\r\n\tNO_PLAYER\020\013\022\025\n\021D"
+      "OUBLE_THREE_SAME\020\014\022!\n\035DOUBLE_THREE_SAME_"
+      "WITH_SINGLE\020\r\022!\n\035DOUBLE_THREE_SAME_WITH_"
+      "DOUBLE\020\016\022\024\n\020THREE_THREE_SAME\020\017\022 \n\034THREE_"
+      "THREE_SAME_WITH_SINGLE\020\020\022 \n\034THREE_THREE_"
+      "SAME_WITH_DOUBLE\020\021\022\023\n\017FOUR_THREE_SAME\020\022\022"
+      "\037\n\033FOUR_THREE_SAME_WITH_SINGLE\020\023\022\023\n\017FIVE"
+      "_THREE_SAME\020\024*\253\002\n\nERROR_CODE\022\013\n\007SUCCESS\020"
+      "\000\022\026\n\022NO_TURN_TO_REQUEST\020\001\022\023\n\017PLAY_TYPE_E"
+      "RROR\020\002\022\020\n\014COMPARE_LOSE\020\003\022\013\n\007NO_PLAY\020\004\022\031\n"
+      "\025CAN_NOT_CALL_LANDLORD\020\005\022\030\n\024NO_ONE_CALL_"
+      "LANDLORD\020\006\022\031\n\025NOT_SELECTED_LANDLORD\020\007\022\025\n"
+      "\021SELECTED_LANDLORD\020\010\022\020\n\014LANDLORD_WIN\020\t\022\017"
+      "\n\013PEASANT_WIN\020\n\022\023\n\017CAN_NOT_NO_PLAY\020\013\022\023\n\017"
+      "PLAYER_OUT_GAME\020\014\022\020\n\014SERVER_ERROR\020\r*)\n\023R"
+      "equestLandlordType\022\010\n\004RUSH\020\000\022\010\n\004CALL\020\001*\\"
+      "\n\021DispatchPokerType\022\016\n\nDEAL_POKER\020\000\022\022\n\016L"
+      "ANDLORD_POKER\020\001\022\021\n\rCURRENT_POKER\020\002\022\020\n\014PL"
+      "AYER_POKER\020\003"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 1898);
+      descriptor, 2012);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "table.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
@@ -1399,6 +1412,8 @@ const int PlayResp::kPlayResultFieldNumber;
 const int PlayResp::kDescFieldNumber;
 const int PlayResp::kAccountFieldNumber;
 const int PlayResp::kNextFieldNumber;
+const int PlayResp::kNextPositionFieldNumber;
+const int PlayResp::kCurrentPositionFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PlayResp::PlayResp()
@@ -1427,7 +1442,9 @@ PlayResp::PlayResp(const PlayResp& from)
   if (from.has_next()) {
     next_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.next_);
   }
-  playresult_ = from.playresult_;
+  ::memcpy(&playresult_, &from.playresult_,
+    reinterpret_cast<char*>(&currentposition_) -
+    reinterpret_cast<char*>(&playresult_) + sizeof(currentposition_));
   // @@protoc_insertion_point(copy_constructor:zhu.table.PlayResp)
 }
 
@@ -1436,7 +1453,8 @@ void PlayResp::SharedCtor() {
   desc_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   account_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   next_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  playresult_ = 0;
+  ::memset(&playresult_, 0, reinterpret_cast<char*>(&currentposition_) -
+    reinterpret_cast<char*>(&playresult_) + sizeof(currentposition_));
 }
 
 PlayResp::~PlayResp() {
@@ -1489,7 +1507,10 @@ void PlayResp::Clear() {
       (*next_.UnsafeRawStringPointer())->clear();
     }
   }
-  playresult_ = 0;
+  if (_has_bits_[0 / 32] & 56u) {
+    ::memset(&playresult_, 0, reinterpret_cast<char*>(&currentposition_) -
+      reinterpret_cast<char*>(&playresult_) + sizeof(currentposition_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -1559,6 +1580,34 @@ bool PlayResp::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 nextPosition = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u)) {
+          set_has_nextposition();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &nextposition_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 currentPosition = 6;
+      case 6: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(48u)) {
+          set_has_currentposition();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &currentposition_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0 ||
@@ -1612,6 +1661,16 @@ void PlayResp::SerializeWithCachedSizes(
       4, this->next(), output);
   }
 
+  // optional uint32 nextPosition = 5;
+  if (cached_has_bits & 0x00000010u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(5, this->nextposition(), output);
+  }
+
+  // optional uint32 currentPosition = 6;
+  if (cached_has_bits & 0x00000020u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->currentposition(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1651,6 +1710,16 @@ void PlayResp::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         4, this->next(), target);
+  }
+
+  // optional uint32 nextPosition = 5;
+  if (cached_has_bits & 0x00000010u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(5, this->nextposition(), target);
+  }
+
+  // optional uint32 currentPosition = 6;
+  if (cached_has_bits & 0x00000020u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->currentposition(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1698,6 +1767,22 @@ size_t PlayResp::ByteSizeLong() const {
     }
 
   }
+  if (_has_bits_[0 / 32] & 48u) {
+    // optional uint32 nextPosition = 5;
+    if (has_nextposition()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->nextposition());
+    }
+
+    // optional uint32 currentPosition = 6;
+    if (has_currentposition()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->currentposition());
+    }
+
+  }
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -1728,7 +1813,7 @@ void PlayResp::MergeFrom(const PlayResp& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 15u) {
+  if (cached_has_bits & 63u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_desc();
       desc_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.desc_);
@@ -1743,6 +1828,12 @@ void PlayResp::MergeFrom(const PlayResp& from) {
     }
     if (cached_has_bits & 0x00000008u) {
       playresult_ = from.playresult_;
+    }
+    if (cached_has_bits & 0x00000010u) {
+      nextposition_ = from.nextposition_;
+    }
+    if (cached_has_bits & 0x00000020u) {
+      currentposition_ = from.currentposition_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -1776,6 +1867,8 @@ void PlayResp::InternalSwap(PlayResp* other) {
   account_.Swap(&other->account_);
   next_.Swap(&other->next_);
   std::swap(playresult_, other->playresult_);
+  std::swap(nextposition_, other->nextposition_);
+  std::swap(currentposition_, other->currentposition_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -2001,6 +2094,54 @@ void PlayResp::set_allocated_next(::std::string* next) {
   }
   next_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), next);
   // @@protoc_insertion_point(field_set_allocated:zhu.table.PlayResp.next)
+}
+
+// optional uint32 nextPosition = 5;
+bool PlayResp::has_nextposition() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+void PlayResp::set_has_nextposition() {
+  _has_bits_[0] |= 0x00000010u;
+}
+void PlayResp::clear_has_nextposition() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+void PlayResp::clear_nextposition() {
+  nextposition_ = 0u;
+  clear_has_nextposition();
+}
+::google::protobuf::uint32 PlayResp::nextposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.PlayResp.nextPosition)
+  return nextposition_;
+}
+void PlayResp::set_nextposition(::google::protobuf::uint32 value) {
+  set_has_nextposition();
+  nextposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.PlayResp.nextPosition)
+}
+
+// optional uint32 currentPosition = 6;
+bool PlayResp::has_currentposition() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+void PlayResp::set_has_currentposition() {
+  _has_bits_[0] |= 0x00000020u;
+}
+void PlayResp::clear_has_currentposition() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+void PlayResp::clear_currentposition() {
+  currentposition_ = 0u;
+  clear_has_currentposition();
+}
+::google::protobuf::uint32 PlayResp::currentposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.PlayResp.currentPosition)
+  return currentposition_;
+}
+void PlayResp::set_currentposition(::google::protobuf::uint32 value) {
+  set_has_currentposition();
+  currentposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.PlayResp.currentPosition)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -2546,10 +2687,12 @@ void RequestLandlordReq::set_type(::zhu::table::RequestLandlordType value) {
 const int RequestLandlordResp::kCallLandlordResultFieldNumber;
 const int RequestLandlordResp::kDescFieldNumber;
 const int RequestLandlordResp::kAccountFieldNumber;
+const int RequestLandlordResp::kCurrentPositionFieldNumber;
 const int RequestLandlordResp::kCallFieldNumber;
 const int RequestLandlordResp::kTypeFieldNumber;
 const int RequestLandlordResp::kNextTypeFieldNumber;
 const int RequestLandlordResp::kNextFieldNumber;
+const int RequestLandlordResp::kNextPositionFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 RequestLandlordResp::RequestLandlordResp()
@@ -2579,8 +2722,8 @@ RequestLandlordResp::RequestLandlordResp(const RequestLandlordResp& from)
     next_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.next_);
   }
   ::memcpy(&calllandlordresult_, &from.calllandlordresult_,
-    reinterpret_cast<char*>(&nexttype_) -
-    reinterpret_cast<char*>(&calllandlordresult_) + sizeof(nexttype_));
+    reinterpret_cast<char*>(&nextposition_) -
+    reinterpret_cast<char*>(&calllandlordresult_) + sizeof(nextposition_));
   // @@protoc_insertion_point(copy_constructor:zhu.table.RequestLandlordResp)
 }
 
@@ -2589,8 +2732,8 @@ void RequestLandlordResp::SharedCtor() {
   desc_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   account_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   next_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&calllandlordresult_, 0, reinterpret_cast<char*>(&nexttype_) -
-    reinterpret_cast<char*>(&calllandlordresult_) + sizeof(nexttype_));
+  ::memset(&calllandlordresult_, 0, reinterpret_cast<char*>(&nextposition_) -
+    reinterpret_cast<char*>(&calllandlordresult_) + sizeof(nextposition_));
 }
 
 RequestLandlordResp::~RequestLandlordResp() {
@@ -2643,10 +2786,11 @@ void RequestLandlordResp::Clear() {
       (*next_.UnsafeRawStringPointer())->clear();
     }
   }
-  if (_has_bits_[0 / 32] & 120u) {
+  if (_has_bits_[0 / 32] & 248u) {
     ::memset(&calllandlordresult_, 0, reinterpret_cast<char*>(&nexttype_) -
       reinterpret_cast<char*>(&calllandlordresult_) + sizeof(nexttype_));
   }
+  nextposition_ = 0u;
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -2704,10 +2848,24 @@ bool RequestLandlordResp::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bool call = 4;
+      // optional uint32 currentPosition = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(32u)) {
+          set_has_currentposition();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &currentposition_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bool call = 5;
+      case 5: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(40u)) {
           set_has_call();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
@@ -2718,26 +2876,7 @@ bool RequestLandlordResp::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .zhu.table.RequestLandlordType type = 5;
-      case 5: {
-        if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(40u)) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::zhu::table::RequestLandlordType_IsValid(value)) {
-            set_type(static_cast< ::zhu::table::RequestLandlordType >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(5, value);
-          }
-        } else {
-          goto handle_unusual;
-        }
-        break;
-      }
-
-      // optional .zhu.table.RequestLandlordType nextType = 6;
+      // optional .zhu.table.RequestLandlordType type = 6;
       case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(48u)) {
@@ -2746,7 +2885,7 @@ bool RequestLandlordResp::MergePartialFromCodedStream(
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
           if (::zhu::table::RequestLandlordType_IsValid(value)) {
-            set_nexttype(static_cast< ::zhu::table::RequestLandlordType >(value));
+            set_type(static_cast< ::zhu::table::RequestLandlordType >(value));
           } else {
             mutable_unknown_fields()->AddVarint(6, value);
           }
@@ -2756,12 +2895,45 @@ bool RequestLandlordResp::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bytes next = 7;
+      // optional .zhu.table.RequestLandlordType nextType = 7;
       case 7: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
-            static_cast< ::google::protobuf::uint8>(58u)) {
+            static_cast< ::google::protobuf::uint8>(56u)) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::zhu::table::RequestLandlordType_IsValid(value)) {
+            set_nexttype(static_cast< ::zhu::table::RequestLandlordType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(7, value);
+          }
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional bytes next = 8;
+      case 8: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(66u)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_next()));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
+      // optional uint32 nextPosition = 9;
+      case 9: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(72u)) {
+          set_has_nextposition();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &nextposition_)));
         } else {
           goto handle_unusual;
         }
@@ -2815,27 +2987,37 @@ void RequestLandlordResp::SerializeWithCachedSizes(
       3, this->account(), output);
   }
 
-  // optional bool call = 4;
+  // optional uint32 currentPosition = 4;
   if (cached_has_bits & 0x00000010u) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(4, this->call(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->currentposition(), output);
   }
 
-  // optional .zhu.table.RequestLandlordType type = 5;
+  // optional bool call = 5;
   if (cached_has_bits & 0x00000020u) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      5, this->type(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->call(), output);
   }
 
-  // optional .zhu.table.RequestLandlordType nextType = 6;
+  // optional .zhu.table.RequestLandlordType type = 6;
   if (cached_has_bits & 0x00000040u) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      6, this->nexttype(), output);
+      6, this->type(), output);
   }
 
-  // optional bytes next = 7;
+  // optional .zhu.table.RequestLandlordType nextType = 7;
+  if (cached_has_bits & 0x00000080u) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      7, this->nexttype(), output);
+  }
+
+  // optional bytes next = 8;
   if (cached_has_bits & 0x00000004u) {
     ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
-      7, this->next(), output);
+      8, this->next(), output);
+  }
+
+  // optional uint32 nextPosition = 9;
+  if (cached_has_bits & 0x00000100u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(9, this->nextposition(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2872,28 +3054,38 @@ void RequestLandlordResp::SerializeWithCachedSizes(
         3, this->account(), target);
   }
 
-  // optional bool call = 4;
+  // optional uint32 currentPosition = 4;
   if (cached_has_bits & 0x00000010u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(4, this->call(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->currentposition(), target);
   }
 
-  // optional .zhu.table.RequestLandlordType type = 5;
+  // optional bool call = 5;
   if (cached_has_bits & 0x00000020u) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      5, this->type(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->call(), target);
   }
 
-  // optional .zhu.table.RequestLandlordType nextType = 6;
+  // optional .zhu.table.RequestLandlordType type = 6;
   if (cached_has_bits & 0x00000040u) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      6, this->nexttype(), target);
+      6, this->type(), target);
   }
 
-  // optional bytes next = 7;
+  // optional .zhu.table.RequestLandlordType nextType = 7;
+  if (cached_has_bits & 0x00000080u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      7, this->nexttype(), target);
+  }
+
+  // optional bytes next = 8;
   if (cached_has_bits & 0x00000004u) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        7, this->next(), target);
+        8, this->next(), target);
+  }
+
+  // optional uint32 nextPosition = 9;
+  if (cached_has_bits & 0x00000100u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(9, this->nextposition(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -2933,7 +3125,7 @@ size_t RequestLandlordResp::ByteSizeLong() const {
           this->account());
     }
 
-    // optional bytes next = 7;
+    // optional bytes next = 8;
     if (has_next()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -2941,25 +3133,39 @@ size_t RequestLandlordResp::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[0 / 32] & 112u) {
-    // optional bool call = 4;
+  if (_has_bits_[0 / 32] & 240u) {
+    // optional uint32 currentPosition = 4;
+    if (has_currentposition()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->currentposition());
+    }
+
+    // optional bool call = 5;
     if (has_call()) {
       total_size += 1 + 1;
     }
 
-    // optional .zhu.table.RequestLandlordType type = 5;
+    // optional .zhu.table.RequestLandlordType type = 6;
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
     }
 
-    // optional .zhu.table.RequestLandlordType nextType = 6;
+    // optional .zhu.table.RequestLandlordType nextType = 7;
     if (has_nexttype()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->nexttype());
     }
 
   }
+  // optional uint32 nextPosition = 9;
+  if (has_nextposition()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->nextposition());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -2990,7 +3196,7 @@ void RequestLandlordResp::MergeFrom(const RequestLandlordResp& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 127u) {
+  if (cached_has_bits & 255u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_desc();
       desc_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.desc_);
@@ -3007,15 +3213,21 @@ void RequestLandlordResp::MergeFrom(const RequestLandlordResp& from) {
       calllandlordresult_ = from.calllandlordresult_;
     }
     if (cached_has_bits & 0x00000010u) {
-      call_ = from.call_;
+      currentposition_ = from.currentposition_;
     }
     if (cached_has_bits & 0x00000020u) {
-      type_ = from.type_;
+      call_ = from.call_;
     }
     if (cached_has_bits & 0x00000040u) {
+      type_ = from.type_;
+    }
+    if (cached_has_bits & 0x00000080u) {
       nexttype_ = from.nexttype_;
     }
     _has_bits_[0] |= cached_has_bits;
+  }
+  if (cached_has_bits & 0x00000100u) {
+    set_nextposition(from.nextposition());
   }
 }
 
@@ -3047,9 +3259,11 @@ void RequestLandlordResp::InternalSwap(RequestLandlordResp* other) {
   account_.Swap(&other->account_);
   next_.Swap(&other->next_);
   std::swap(calllandlordresult_, other->calllandlordresult_);
+  std::swap(currentposition_, other->currentposition_);
   std::swap(call_, other->call_);
   std::swap(type_, other->type_);
   std::swap(nexttype_, other->nexttype_);
+  std::swap(nextposition_, other->nextposition_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -3214,15 +3428,39 @@ void RequestLandlordResp::set_allocated_account(::std::string* account) {
   // @@protoc_insertion_point(field_set_allocated:zhu.table.RequestLandlordResp.account)
 }
 
-// optional bool call = 4;
-bool RequestLandlordResp::has_call() const {
+// optional uint32 currentPosition = 4;
+bool RequestLandlordResp::has_currentposition() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-void RequestLandlordResp::set_has_call() {
+void RequestLandlordResp::set_has_currentposition() {
   _has_bits_[0] |= 0x00000010u;
 }
-void RequestLandlordResp::clear_has_call() {
+void RequestLandlordResp::clear_has_currentposition() {
   _has_bits_[0] &= ~0x00000010u;
+}
+void RequestLandlordResp::clear_currentposition() {
+  currentposition_ = 0u;
+  clear_has_currentposition();
+}
+::google::protobuf::uint32 RequestLandlordResp::currentposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.RequestLandlordResp.currentPosition)
+  return currentposition_;
+}
+void RequestLandlordResp::set_currentposition(::google::protobuf::uint32 value) {
+  set_has_currentposition();
+  currentposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.currentPosition)
+}
+
+// optional bool call = 5;
+bool RequestLandlordResp::has_call() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+void RequestLandlordResp::set_has_call() {
+  _has_bits_[0] |= 0x00000020u;
+}
+void RequestLandlordResp::clear_has_call() {
+  _has_bits_[0] &= ~0x00000020u;
 }
 void RequestLandlordResp::clear_call() {
   call_ = false;
@@ -3238,15 +3476,15 @@ void RequestLandlordResp::set_call(bool value) {
   // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.call)
 }
 
-// optional .zhu.table.RequestLandlordType type = 5;
+// optional .zhu.table.RequestLandlordType type = 6;
 bool RequestLandlordResp::has_type() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 void RequestLandlordResp::set_has_type() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 void RequestLandlordResp::clear_has_type() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 void RequestLandlordResp::clear_type() {
   type_ = 0;
@@ -3263,15 +3501,15 @@ void RequestLandlordResp::set_type(::zhu::table::RequestLandlordType value) {
   // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.type)
 }
 
-// optional .zhu.table.RequestLandlordType nextType = 6;
+// optional .zhu.table.RequestLandlordType nextType = 7;
 bool RequestLandlordResp::has_nexttype() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 void RequestLandlordResp::set_has_nexttype() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 void RequestLandlordResp::clear_has_nexttype() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 void RequestLandlordResp::clear_nexttype() {
   nexttype_ = 0;
@@ -3288,7 +3526,7 @@ void RequestLandlordResp::set_nexttype(::zhu::table::RequestLandlordType value) 
   // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.nextType)
 }
 
-// optional bytes next = 7;
+// optional bytes next = 8;
 bool RequestLandlordResp::has_next() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -3351,6 +3589,30 @@ void RequestLandlordResp::set_allocated_next(::std::string* next) {
   // @@protoc_insertion_point(field_set_allocated:zhu.table.RequestLandlordResp.next)
 }
 
+// optional uint32 nextPosition = 9;
+bool RequestLandlordResp::has_nextposition() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+void RequestLandlordResp::set_has_nextposition() {
+  _has_bits_[0] |= 0x00000100u;
+}
+void RequestLandlordResp::clear_has_nextposition() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+void RequestLandlordResp::clear_nextposition() {
+  nextposition_ = 0u;
+  clear_has_nextposition();
+}
+::google::protobuf::uint32 RequestLandlordResp::nextposition() const {
+  // @@protoc_insertion_point(field_get:zhu.table.RequestLandlordResp.nextPosition)
+  return nextposition_;
+}
+void RequestLandlordResp::set_nextposition(::google::protobuf::uint32 value) {
+  set_has_nextposition();
+  nextposition_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.RequestLandlordResp.nextPosition)
+}
+
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // ===================================================================
@@ -3359,6 +3621,7 @@ void RequestLandlordResp::set_allocated_next(::std::string* next) {
 const int DispatchPoker::kPockersFieldNumber;
 const int DispatchPoker::kTypeFieldNumber;
 const int DispatchPoker::kLandlordAccountFieldNumber;
+const int DispatchPoker::kPositionFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DispatchPoker::DispatchPoker()
@@ -3380,14 +3643,17 @@ DispatchPoker::DispatchPoker(const DispatchPoker& from)
   if (from.has_landlordaccount()) {
     landlordaccount_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.landlordaccount_);
   }
-  type_ = from.type_;
+  ::memcpy(&type_, &from.type_,
+    reinterpret_cast<char*>(&position_) -
+    reinterpret_cast<char*>(&type_) + sizeof(position_));
   // @@protoc_insertion_point(copy_constructor:zhu.table.DispatchPoker)
 }
 
 void DispatchPoker::SharedCtor() {
   _cached_size_ = 0;
   landlordaccount_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  type_ = 0;
+  ::memset(&type_, 0, reinterpret_cast<char*>(&position_) -
+    reinterpret_cast<char*>(&type_) + sizeof(position_));
 }
 
 DispatchPoker::~DispatchPoker() {
@@ -3429,7 +3695,10 @@ void DispatchPoker::Clear() {
     GOOGLE_DCHECK(!landlordaccount_.IsDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited()));
     (*landlordaccount_.UnsafeRawStringPointer())->clear();
   }
-  type_ = 0;
+  if (_has_bits_[0 / 32] & 6u) {
+    ::memset(&type_, 0, reinterpret_cast<char*>(&position_) -
+      reinterpret_cast<char*>(&type_) + sizeof(position_));
+  }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
@@ -3487,6 +3756,20 @@ bool DispatchPoker::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 position = 4;
+      case 4: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(32u)) {
+          set_has_position();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &position_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0 ||
@@ -3534,6 +3817,11 @@ void DispatchPoker::SerializeWithCachedSizes(
       3, this->landlordaccount(), output);
   }
 
+  // optional uint32 position = 4;
+  if (cached_has_bits & 0x00000004u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(4, this->position(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3566,6 +3854,11 @@ void DispatchPoker::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         3, this->landlordaccount(), target);
+  }
+
+  // optional uint32 position = 4;
+  if (cached_has_bits & 0x00000004u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(4, this->position(), target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -3608,6 +3901,13 @@ size_t DispatchPoker::ByteSizeLong() const {
         this->landlordaccount());
   }
 
+  // optional uint32 position = 4;
+  if (has_position()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt32Size(
+        this->position());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = cached_size;
@@ -3639,13 +3939,16 @@ void DispatchPoker::MergeFrom(const DispatchPoker& from) {
 
   pockers_.MergeFrom(from.pockers_);
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 3u) {
+  if (cached_has_bits & 7u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_landlordaccount();
       landlordaccount_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.landlordaccount_);
     }
     if (cached_has_bits & 0x00000002u) {
       type_ = from.type_;
+    }
+    if (cached_has_bits & 0x00000004u) {
+      position_ = from.position_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -3679,6 +3982,7 @@ void DispatchPoker::InternalSwap(DispatchPoker* other) {
   pockers_.InternalSwap(&other->pockers_);
   landlordaccount_.Swap(&other->landlordaccount_);
   std::swap(type_, other->type_);
+  std::swap(position_, other->position_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -3808,6 +4112,30 @@ void DispatchPoker::set_allocated_landlordaccount(::std::string* landlordaccount
   }
   landlordaccount_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), landlordaccount);
   // @@protoc_insertion_point(field_set_allocated:zhu.table.DispatchPoker.landlordAccount)
+}
+
+// optional uint32 position = 4;
+bool DispatchPoker::has_position() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+void DispatchPoker::set_has_position() {
+  _has_bits_[0] |= 0x00000004u;
+}
+void DispatchPoker::clear_has_position() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+void DispatchPoker::clear_position() {
+  position_ = 0u;
+  clear_has_position();
+}
+::google::protobuf::uint32 DispatchPoker::position() const {
+  // @@protoc_insertion_point(field_get:zhu.table.DispatchPoker.position)
+  return position_;
+}
+void DispatchPoker::set_position(::google::protobuf::uint32 value) {
+  set_has_position();
+  position_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.DispatchPoker.position)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

@@ -13,6 +13,7 @@
 #include "message/MsgMgr.h"
 #include "thread/ThreadLib.h"
 #include "module/ModuleMgr.h"
+#include "db/ConnectionPool.h"
 
 using namespace SocketLib;
 using namespace zhu;
@@ -221,6 +222,9 @@ int main()
 		ConfigConsole();
 
 		logger_info("服务端初始化");
+
+		//初始化mysql连接
+		CConnectionPool::Instance();
 
 		// 创建监听管理器
 		ListeningManager<CProtobuf> listener;

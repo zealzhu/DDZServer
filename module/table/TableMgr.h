@@ -11,7 +11,7 @@
 //  Include Files
 // ========================================================================
 #include "../IModule.h"
-#include "../../message/ndmsg.pb.h"
+#include "../../message/BaseMsg.pb.h"
 #include "../../protocol/Protobuf.h"
 #include "../../socket/ConnectionManager.h"
 #include "../../socket/SocketLibTypes.h"
@@ -19,7 +19,6 @@
 #include "Table.h"
 
 using namespace std;
-using namespace nd;
 
 namespace zhu {
 
@@ -80,7 +79,7 @@ namespace zhu {
 			return true;
 		}
 
-		virtual void HandleMsg(std::shared_ptr<nd::SelfDescribingMessage> pMsg) override;
+		virtual void HandleMsg(std::shared_ptr<zhu::SelfDescribingMessage> pMsg) override;
 
 		virtual string GetModuleName() override
 		{
@@ -157,7 +156,7 @@ namespace zhu {
 		void RequestLandlord(int iSocket, REQUEST_LANDLORD_REQ pMsg);
 
 		// 发送响应消息给其他用户
-		void SendResponseToOtherPlayer(std::shared_ptr<nd::SelfDescribingMessage>, 
+		void SendResponseToOtherPlayer(std::shared_ptr<zhu::SelfDescribingMessage>, 
 			Player callPlayer, TABLE_PTR pTable);
 
 	private:

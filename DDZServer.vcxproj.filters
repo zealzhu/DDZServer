@@ -20,6 +20,14 @@
     <ClCompile Include="module\user\msg\player.pb.cc" />
     <ClCompile Include="module\user\UserDao.cpp" />
     <ClCompile Include="module\user\UserMgr.cpp" />
+    <ClCompile Include="utils\StringUtils.cpp" />
+    <ClCompile Include="db\DbMgr.cpp" />
+    <ClCompile Include="db\ConnectionPool.cpp" />
+    <ClCompile Include="module\room\msg\room.pb.cc" />
+    <ClCompile Include="module\room\RoomMgr.cpp" />
+    <ClCompile Include="module\table\msg\table.pb.cc" />
+    <ClCompile Include="module\table\Table.cpp" />
+    <ClCompile Include="module\table\TableMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thread\ThreadException.h" />
@@ -38,7 +46,6 @@
     <ClInclude Include="basic\GameLog.h" />
     <ClInclude Include="basic\FileUtil.h" />
     <ClInclude Include="basic\ConfigMgr.h" />
-    <ClInclude Include="basic\basic.h" />
     <ClInclude Include="basic\Exception.h" />
     <ClInclude Include="message\MsgMgr.h" />
     <ClInclude Include="protocol\Protobuf.h" />
@@ -56,5 +63,14 @@
     <ClInclude Include="module\user\UserMgr.h" />
     <ClInclude Include="module\IModule.h" />
     <ClInclude Include="module\ModuleMgr.h" />
+    <ClInclude Include="utils\StringUtils.h" />
+    <ClInclude Include="db\DbMgr.h" />
+    <ClInclude Include="db\ConnectionPool.h" />
+    <ClInclude Include="module\room\msg\room.pb.h" />
+    <ClInclude Include="module\room\RoomMgr.h" />
+    <ClInclude Include="basic\Basic.h" />
+    <ClInclude Include="module\table\msg\table.pb.h" />
+    <ClInclude Include="module\table\Table.h" />
+    <ClInclude Include="module\table\TableMgr.h" />
   </ItemGroup>
 </Project>

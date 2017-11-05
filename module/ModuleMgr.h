@@ -13,8 +13,8 @@
 // ========================================================================
 #include "IModule.h"
 #include "user/UserMgr.h"
-//#include "room/RoomMgr.h"
-//#include "table/TableMgr.h"
+#include "room/RoomMgr.h"
+#include "table/TableMgr.h"
 //#include "score/ScoreMgr.h"
 #include "../socket/ConnectionManager.h"
 #include "../message/BaseMsg.pb.h"
@@ -77,18 +77,18 @@ namespace zhu
 			m_manager->AddListener(pUserMgr);		//添加连接监听
 			AddMoudle(pUserMgr);					//添加用户模块
 
-			////创建房间模块管理器
-			//std::shared_ptr<CRoomMgr> pRoomMgr(NEW_ND CRoomMgr());
-			//pRoomMgr->Init();						//初始化
-			//m_manager->AddListener(pRoomMgr);		//添加连接监听
-			//AddMoudle(pRoomMgr);					//添加房间模块
+			//创建房间模块管理器
+			std::shared_ptr<CRoomMgr> pRoomMgr(NEW_ND CRoomMgr());
+			pRoomMgr->Init();						//初始化
+			m_manager->AddListener(pRoomMgr);		//添加连接监听
+			AddMoudle(pRoomMgr);					//添加房间模块
 
-			////创建牌桌模块管理器
-			//std::shared_ptr<CTableMgr> pTableMgr(NEW_ND CTableMgr());
-			//pTableMgr->Init();
-			//pRoomMgr->AddListener(pTableMgr);		//添加房间模块的监听
-			//m_manager->AddListener(pTableMgr);		//添加连接监听
-			//AddMoudle(pTableMgr);					//添加房间模块
+			//创建牌桌模块管理器
+			std::shared_ptr<CTableMgr> pTableMgr(NEW_ND CTableMgr());
+			pTableMgr->Init();
+			pRoomMgr->AddListener(pTableMgr);		//添加房间模块的监听
+			m_manager->AddListener(pTableMgr);		//添加连接监听
+			AddMoudle(pTableMgr);					//添加房间模块
 
 			////创建分数模块
 			//std::shared_ptr<CScoreMgr> pScoreMgr(NEW_ND CScoreMgr());

@@ -18,6 +18,7 @@
 #include "../../socket/SocketLibTypes.h"
 #include "UserDao.h"
 #include "msg/player.pb.h"
+#include "../room/RoomMgr.h"
 
 using namespace std;
 
@@ -33,7 +34,7 @@ namespace zhu
 
 	};
 
-    class CUserMgr : public IModule, public SocketLib::IConnectionEvent/*, public zhu::IRoomStatusChangeEvent*/
+    class CUserMgr : public IModule, public SocketLib::IConnectionEvent
     {
 		// UID <-> PLAYER
 		typedef std::map<int, PLAYER_PTR > PLAYER_MAP;

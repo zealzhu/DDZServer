@@ -11,7 +11,7 @@
 //  Include Files
 // ========================================================================
 #include "../IModule.h"
-#include "../../message/ndmsg.pb.h"
+#include "../../message/BaseMsg.pb.h"
 #include "../../protocol/Protobuf.h"
 #include "../../socket/ConnectionManager.h"
 #include "../../socket/SocketLibTypes.h"
@@ -20,7 +20,6 @@
 #define MAX_ROOM_NUMBER 5
 
 using namespace std;
-using namespace nd;
 
 namespace zhu {
 	typedef std::shared_ptr<zhu::room::Room> ROOM_PTR;
@@ -87,7 +86,7 @@ namespace zhu {
 			return true;
 		}
 
-		virtual void HandleMsg(std::shared_ptr<nd::SelfDescribingMessage> pMsg) override;
+		virtual void HandleMsg(std::shared_ptr<zhu::SelfDescribingMessage> pMsg) override;
 
 		virtual string GetModuleName() override
 		{
@@ -143,8 +142,11 @@ namespace zhu {
 		// 准备
 		void Ready(int iSocket, READY_PTR pReadyReq);
 
+		// 发送进入房间消息
+		void SendOtherPlayerStatuChange(ROOM_PTR pRoom, int iSeat);
+
 		// 发送已准备消息
-		void SendReadyToOtherPlayer(int iSocket, string strAccount, bool bReady);
+		void SendReadyToOtherPlayer(int iSocket, int iSeat, string strAccount, bool bReady);
 
 		// 游戏开始
 		void Start(int iSocket, int iRoomId);

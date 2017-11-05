@@ -30,8 +30,9 @@ message Seat {
 		NO_PLAYER = 2;												//无玩家
 	}
 	required SeatStatus statu = 1 [default = NO_PLAYER];			//座位状态
-	optional int32 socket = 2;										//玩家socket
-	optional bytes playerAccount = 3;								//玩家账号
+	required uint32 position = 2;									//座位号
+	optional int32 socket = 3;										//玩家socket
+	optional bytes playerAccount =4;								//玩家账号
 }
 
 //房间
@@ -76,8 +77,9 @@ message EnterRoomReq {
 //进入房间响应
 message EnterRoomResp {
 	required ERROR_CODE enterResult = 1;
-	optional bytes desc = 2;
-	optional uint32 position = 3;
+	optional Room roomInfo = 2;
+	optional bytes desc = 3;
+	optional uint32 position = 4;
 }
 
 //创建房间请求
@@ -102,9 +104,10 @@ message ReadyReq {
 //准备响应
 message ReadyResp {
 	required ERROR_CODE readyResult = 1;
-	optional bytes account = 2;					//账号
-	optional bool ready = 3;					//是否准备
-	optional bytes desc = 4;					//消息
+	optional bytes account = 2;					// 账号
+	optional uint32 position = 3;				// 位置
+	optional bool ready = 4;					// 是否准备
+	optional bytes desc = 5;					// 消息
 }
 
 //游戏结束消息
