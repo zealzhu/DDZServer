@@ -288,7 +288,7 @@ __pycache__/
 *.xsd.cs
 
 # boost
-/include/boost
+/include/boost_1_65_1
 
 !/lib/libprotobuf/debug
 !/lib/libprotobuf/release
