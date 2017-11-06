@@ -16,8 +16,9 @@
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/io/zero_copy_stream_impl_lite.h>
 
-#include "../socket/SocketLibErrors.h"
-#include "../basic/basic.h"
+#include "./socket/SocketLibErrors.h"
+#include "./basic/basic.h"
+#include "./basic/GameLog.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -106,7 +107,9 @@ const char* CProtobuf::Encode(const google::protobuf::Message& pMessage, int& iB
 	// 清零
 	ZeroMemory(pBuf, iBufSize);
 	// 将本地字节流转换为网络字节流
+	//logger_debug("send byte size：{}", pMessage.ByteSize());
 	unsigned int iNumber = htonl(pMessage.ByteSize());
+	//logger_debug("htonl size：{}", iNumber);
 	// 头四个字节用来存储数据包大小
 	memcpy(pBuf, &iNumber, HEADERRSIZE);
 	// 以下就是将protobuf数据序列化到内存中

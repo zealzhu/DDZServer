@@ -100,12 +100,14 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, next_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, nextposition_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, currentposition_),
+  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PlayResp, number_),
   3,
   0,
   1,
   2,
   4,
   5,
+  6,
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordReq, _has_bits_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RequestLandlordReq, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -171,11 +173,11 @@ const ::google::protobuf::uint32 TableStruct::offsets[] = {
 static const ::google::protobuf::internal::MigrationSchema schemas[] = {
   { 0, 8, sizeof(Poker)},
   { 11, 20, sizeof(PlayReq)},
-  { 24, 35, sizeof(PlayResp)},
-  { 41, 50, sizeof(RequestLandlordReq)},
-  { 54, 68, sizeof(RequestLandlordResp)},
-  { 77, 86, sizeof(DispatchPoker)},
-  { 90, 98, sizeof(PlayerOut)},
+  { 24, 36, sizeof(PlayResp)},
+  { 43, 52, sizeof(RequestLandlordReq)},
+  { 56, 70, sizeof(RequestLandlordResp)},
+  { 79, 88, sizeof(DispatchPoker)},
+  { 92, 100, sizeof(PlayerOut)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -253,55 +255,55 @@ void AddDescriptorsImpl() {
       ".zhu.table.POKER_SUIT\"p\n\007PlayReq\022\016\n\006room"
       "Id\030\001 \002(\r\022\017\n\007account\030\002 \002(\014\022\"\n\004type\030\003 \002(\0162"
       "\024.zhu.table.PLAY_TYPE\022 \n\006pokers\030\004 \003(\0132\020."
-      "zhu.table.Poker\"\221\001\n\010PlayResp\022)\n\nplayResu"
+      "zhu.table.Poker\"\241\001\n\010PlayResp\022)\n\nplayResu"
       "lt\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014\n\004desc\030"
       "\002 \001(\014\022\017\n\007account\030\003 \001(\014\022\014\n\004next\030\004 \001(\014\022\024\n\014"
       "nextPosition\030\005 \001(\r\022\027\n\017currentPosition\030\006 "
-      "\001(\r\"q\n\022RequestLandlordReq\022\016\n\006roomId\030\001 \002("
-      "\r\022\017\n\007account\030\002 \002(\014\022\014\n\004call\030\003 \002(\010\022,\n\004type"
-      "\030\004 \001(\0162\036.zhu.table.RequestLandlordType\"\222"
-      "\002\n\023RequestLandlordResp\0221\n\022callLandlordRe"
-      "sult\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014\n\004des"
-      "c\030\002 \001(\014\022\017\n\007account\030\003 \001(\014\022\027\n\017currentPosit"
-      "ion\030\004 \001(\r\022\014\n\004call\030\005 \001(\010\022,\n\004type\030\006 \001(\0162\036."
-      "zhu.table.RequestLandlordType\0220\n\010nextTyp"
-      "e\030\007 \001(\0162\036.zhu.table.RequestLandlordType\022"
-      "\014\n\004next\030\010 \001(\014\022\024\n\014nextPosition\030\t \001(\r\"\211\001\n\r"
-      "DispatchPoker\022!\n\007pockers\030\001 \003(\0132\020.zhu.tab"
-      "le.Poker\022*\n\004type\030\002 \002(\0162\034.zhu.table.Dispa"
-      "tchPokerType\022\027\n\017landlordAccount\030\003 \001(\014\022\020\n"
-      "\010position\030\004 \001(\r\"V\n\tPlayerOut\022*\n\013errorRes"
-      "ult\030\001 \002(\0162\025.zhu.table.ERROR_CODE\022\014\n\004desc"
-      "\030\002 \001(\014\022\017\n\007account\030\003 \001(\014*[\n\nPOKER_SUIT\022\t\n"
-      "\005SPADE\020\000\022\t\n\005HEART\020\001\022\013\n\007DIAMOND\020\002\022\010\n\004CLUB"
-      "\020\003\022\020\n\014SMALL_JACKER\020\004\022\016\n\nBIG_JACKER\020\005*\356\003\n"
-      "\tPLAY_TYPE\022\021\n\rDOUBLE_JOCKER\020\000\022\010\n\004BOMB\020\001\022"
-      "\n\n\006SINGLE\020\002\022\017\n\013DOUBLE_SAME\020\003\022\016\n\nTHREE_SA"
-      "ME\020\004\022\027\n\023THREE_SAME_WITH_ONE\020\005\022\027\n\023THREE_S"
-      "AME_WITH_TWO\020\006\022\023\n\017SINGLE_STRAIGHT\020\007\022\023\n\017D"
-      "OUBLE_STRAIGHT\020\010\022\024\n\020BOMB_WIHT_SINGLE\020\t\022\024"
-      "\n\020BOMB_WIHT_DOUBLE\020\n\022\r\n\tNO_PLAYER\020\013\022\025\n\021D"
-      "OUBLE_THREE_SAME\020\014\022!\n\035DOUBLE_THREE_SAME_"
-      "WITH_SINGLE\020\r\022!\n\035DOUBLE_THREE_SAME_WITH_"
-      "DOUBLE\020\016\022\024\n\020THREE_THREE_SAME\020\017\022 \n\034THREE_"
-      "THREE_SAME_WITH_SINGLE\020\020\022 \n\034THREE_THREE_"
-      "SAME_WITH_DOUBLE\020\021\022\023\n\017FOUR_THREE_SAME\020\022\022"
-      "\037\n\033FOUR_THREE_SAME_WITH_SINGLE\020\023\022\023\n\017FIVE"
-      "_THREE_SAME\020\024*\253\002\n\nERROR_CODE\022\013\n\007SUCCESS\020"
-      "\000\022\026\n\022NO_TURN_TO_REQUEST\020\001\022\023\n\017PLAY_TYPE_E"
-      "RROR\020\002\022\020\n\014COMPARE_LOSE\020\003\022\013\n\007NO_PLAY\020\004\022\031\n"
-      "\025CAN_NOT_CALL_LANDLORD\020\005\022\030\n\024NO_ONE_CALL_"
-      "LANDLORD\020\006\022\031\n\025NOT_SELECTED_LANDLORD\020\007\022\025\n"
-      "\021SELECTED_LANDLORD\020\010\022\020\n\014LANDLORD_WIN\020\t\022\017"
-      "\n\013PEASANT_WIN\020\n\022\023\n\017CAN_NOT_NO_PLAY\020\013\022\023\n\017"
-      "PLAYER_OUT_GAME\020\014\022\020\n\014SERVER_ERROR\020\r*)\n\023R"
-      "equestLandlordType\022\010\n\004RUSH\020\000\022\010\n\004CALL\020\001*\\"
-      "\n\021DispatchPokerType\022\016\n\nDEAL_POKER\020\000\022\022\n\016L"
-      "ANDLORD_POKER\020\001\022\021\n\rCURRENT_POKER\020\002\022\020\n\014PL"
-      "AYER_POKER\020\003"
+      "\001(\r\022\016\n\006number\030\007 \001(\r\"q\n\022RequestLandlordRe"
+      "q\022\016\n\006roomId\030\001 \002(\r\022\017\n\007account\030\002 \002(\014\022\014\n\004ca"
+      "ll\030\003 \002(\010\022,\n\004type\030\004 \001(\0162\036.zhu.table.Reque"
+      "stLandlordType\"\222\002\n\023RequestLandlordResp\0221"
+      "\n\022callLandlordResult\030\001 \002(\0162\025.zhu.table.E"
+      "RROR_CODE\022\014\n\004desc\030\002 \001(\014\022\017\n\007account\030\003 \001(\014"
+      "\022\027\n\017currentPosition\030\004 \001(\r\022\014\n\004call\030\005 \001(\010\022"
+      ",\n\004type\030\006 \001(\0162\036.zhu.table.RequestLandlor"
+      "dType\0220\n\010nextType\030\007 \001(\0162\036.zhu.table.Requ"
+      "estLandlordType\022\014\n\004next\030\010 \001(\014\022\024\n\014nextPos"
+      "ition\030\t \001(\r\"\211\001\n\rDispatchPoker\022!\n\007pockers"
+      "\030\001 \003(\0132\020.zhu.table.Poker\022*\n\004type\030\002 \002(\0162\034"
+      ".zhu.table.DispatchPokerType\022\027\n\017landlord"
+      "Account\030\003 \001(\014\022\020\n\010position\030\004 \001(\r\"V\n\tPlaye"
+      "rOut\022*\n\013errorResult\030\001 \002(\0162\025.zhu.table.ER"
+      "ROR_CODE\022\014\n\004desc\030\002 \001(\014\022\017\n\007account\030\003 \001(\014*"
+      "[\n\nPOKER_SUIT\022\t\n\005SPADE\020\000\022\t\n\005HEART\020\001\022\013\n\007D"
+      "IAMOND\020\002\022\010\n\004CLUB\020\003\022\020\n\014SMALL_JACKER\020\004\022\016\n\n"
+      "BIG_JACKER\020\005*\356\003\n\tPLAY_TYPE\022\021\n\rDOUBLE_JOC"
+      "KER\020\000\022\010\n\004BOMB\020\001\022\n\n\006SINGLE\020\002\022\017\n\013DOUBLE_SA"
+      "ME\020\003\022\016\n\nTHREE_SAME\020\004\022\027\n\023THREE_SAME_WITH_"
+      "ONE\020\005\022\027\n\023THREE_SAME_WITH_TWO\020\006\022\023\n\017SINGLE"
+      "_STRAIGHT\020\007\022\023\n\017DOUBLE_STRAIGHT\020\010\022\024\n\020BOMB"
+      "_WIHT_SINGLE\020\t\022\024\n\020BOMB_WIHT_DOUBLE\020\n\022\r\n\t"
+      "NO_PLAYER\020\013\022\025\n\021DOUBLE_THREE_SAME\020\014\022!\n\035DO"
+      "UBLE_THREE_SAME_WITH_SINGLE\020\r\022!\n\035DOUBLE_"
+      "THREE_SAME_WITH_DOUBLE\020\016\022\024\n\020THREE_THREE_"
+      "SAME\020\017\022 \n\034THREE_THREE_SAME_WITH_SINGLE\020\020"
+      "\022 \n\034THREE_THREE_SAME_WITH_DOUBLE\020\021\022\023\n\017FO"
+      "UR_THREE_SAME\020\022\022\037\n\033FOUR_THREE_SAME_WITH_"
+      "SINGLE\020\023\022\023\n\017FIVE_THREE_SAME\020\024*\253\002\n\nERROR_"
+      "CODE\022\013\n\007SUCCESS\020\000\022\026\n\022NO_TURN_TO_REQUEST\020"
+      "\001\022\023\n\017PLAY_TYPE_ERROR\020\002\022\020\n\014COMPARE_LOSE\020\003"
+      "\022\013\n\007NO_PLAY\020\004\022\031\n\025CAN_NOT_CALL_LANDLORD\020\005"
+      "\022\030\n\024NO_ONE_CALL_LANDLORD\020\006\022\031\n\025NOT_SELECT"
+      "ED_LANDLORD\020\007\022\025\n\021SELECTED_LANDLORD\020\010\022\020\n\014"
+      "LANDLORD_WIN\020\t\022\017\n\013PEASANT_WIN\020\n\022\023\n\017CAN_N"
+      "OT_NO_PLAY\020\013\022\023\n\017PLAYER_OUT_GAME\020\014\022\020\n\014SER"
+      "VER_ERROR\020\r*)\n\023RequestLandlordType\022\010\n\004RU"
+      "SH\020\000\022\010\n\004CALL\020\001*\\\n\021DispatchPokerType\022\016\n\nD"
+      "EAL_POKER\020\000\022\022\n\016LANDLORD_POKER\020\001\022\021\n\rCURRE"
+      "NT_POKER\020\002\022\020\n\014PLAYER_POKER\020\003"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 2012);
+      descriptor, 2028);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "table.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&TableStruct::Shutdown);
@@ -1414,6 +1416,7 @@ const int PlayResp::kAccountFieldNumber;
 const int PlayResp::kNextFieldNumber;
 const int PlayResp::kNextPositionFieldNumber;
 const int PlayResp::kCurrentPositionFieldNumber;
+const int PlayResp::kNumberFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 PlayResp::PlayResp()
@@ -1443,8 +1446,8 @@ PlayResp::PlayResp(const PlayResp& from)
     next_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.next_);
   }
   ::memcpy(&playresult_, &from.playresult_,
-    reinterpret_cast<char*>(&currentposition_) -
-    reinterpret_cast<char*>(&playresult_) + sizeof(currentposition_));
+    reinterpret_cast<char*>(&number_) -
+    reinterpret_cast<char*>(&playresult_) + sizeof(number_));
   // @@protoc_insertion_point(copy_constructor:zhu.table.PlayResp)
 }
 
@@ -1453,8 +1456,8 @@ void PlayResp::SharedCtor() {
   desc_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   account_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   next_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  ::memset(&playresult_, 0, reinterpret_cast<char*>(&currentposition_) -
-    reinterpret_cast<char*>(&playresult_) + sizeof(currentposition_));
+  ::memset(&playresult_, 0, reinterpret_cast<char*>(&number_) -
+    reinterpret_cast<char*>(&playresult_) + sizeof(number_));
 }
 
 PlayResp::~PlayResp() {
@@ -1507,9 +1510,9 @@ void PlayResp::Clear() {
       (*next_.UnsafeRawStringPointer())->clear();
     }
   }
-  if (_has_bits_[0 / 32] & 56u) {
-    ::memset(&playresult_, 0, reinterpret_cast<char*>(&currentposition_) -
-      reinterpret_cast<char*>(&playresult_) + sizeof(currentposition_));
+  if (_has_bits_[0 / 32] & 120u) {
+    ::memset(&playresult_, 0, reinterpret_cast<char*>(&number_) -
+      reinterpret_cast<char*>(&playresult_) + sizeof(number_));
   }
   _has_bits_.Clear();
   _internal_metadata_.Clear();
@@ -1608,6 +1611,20 @@ bool PlayResp::MergePartialFromCodedStream(
         break;
       }
 
+      // optional uint32 number = 7;
+      case 7: {
+        if (static_cast< ::google::protobuf::uint8>(tag) ==
+            static_cast< ::google::protobuf::uint8>(56u)) {
+          set_has_number();
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &number_)));
+        } else {
+          goto handle_unusual;
+        }
+        break;
+      }
+
       default: {
       handle_unusual:
         if (tag == 0 ||
@@ -1671,6 +1688,11 @@ void PlayResp::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(6, this->currentposition(), output);
   }
 
+  // optional uint32 number = 7;
+  if (cached_has_bits & 0x00000040u) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(7, this->number(), output);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1722,6 +1744,11 @@ void PlayResp::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(6, this->currentposition(), target);
   }
 
+  // optional uint32 number = 7;
+  if (cached_has_bits & 0x00000040u) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(7, this->number(), target);
+  }
+
   if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1767,7 +1794,7 @@ size_t PlayResp::ByteSizeLong() const {
     }
 
   }
-  if (_has_bits_[0 / 32] & 48u) {
+  if (_has_bits_[0 / 32] & 112u) {
     // optional uint32 nextPosition = 5;
     if (has_nextposition()) {
       total_size += 1 +
@@ -1780,6 +1807,13 @@ size_t PlayResp::ByteSizeLong() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->currentposition());
+    }
+
+    // optional uint32 number = 7;
+    if (has_number()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->number());
     }
 
   }
@@ -1813,7 +1847,7 @@ void PlayResp::MergeFrom(const PlayResp& from) {
   (void) cached_has_bits;
 
   cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 63u) {
+  if (cached_has_bits & 127u) {
     if (cached_has_bits & 0x00000001u) {
       set_has_desc();
       desc_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.desc_);
@@ -1834,6 +1868,9 @@ void PlayResp::MergeFrom(const PlayResp& from) {
     }
     if (cached_has_bits & 0x00000020u) {
       currentposition_ = from.currentposition_;
+    }
+    if (cached_has_bits & 0x00000040u) {
+      number_ = from.number_;
     }
     _has_bits_[0] |= cached_has_bits;
   }
@@ -1869,6 +1906,7 @@ void PlayResp::InternalSwap(PlayResp* other) {
   std::swap(playresult_, other->playresult_);
   std::swap(nextposition_, other->nextposition_);
   std::swap(currentposition_, other->currentposition_);
+  std::swap(number_, other->number_);
   std::swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -2142,6 +2180,30 @@ void PlayResp::set_currentposition(::google::protobuf::uint32 value) {
   set_has_currentposition();
   currentposition_ = value;
   // @@protoc_insertion_point(field_set:zhu.table.PlayResp.currentPosition)
+}
+
+// optional uint32 number = 7;
+bool PlayResp::has_number() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+void PlayResp::set_has_number() {
+  _has_bits_[0] |= 0x00000040u;
+}
+void PlayResp::clear_has_number() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+void PlayResp::clear_number() {
+  number_ = 0u;
+  clear_has_number();
+}
+::google::protobuf::uint32 PlayResp::number() const {
+  // @@protoc_insertion_point(field_get:zhu.table.PlayResp.number)
+  return number_;
+}
+void PlayResp::set_number(::google::protobuf::uint32 value) {
+  set_has_number();
+  number_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.PlayResp.number)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

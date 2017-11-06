@@ -92,12 +92,13 @@ message PlayReq {
 
 // 出牌响应
 message PlayResp {
-	required ERROR_CODE playResult = 1;			//响应类型
-	optional bytes desc = 2;					//响应消息
-	optional bytes account = 3;					//当前请求玩家
-	optional bytes next = 4;					//下一个请求账号
+	required ERROR_CODE playResult = 1;			// 响应类型
+	optional bytes desc = 2;					// 响应消息
+	optional bytes account = 3;					// 当前请求玩家
+	optional bytes next = 4;					// 下一个请求账号
 	optional uint32 nextPosition = 5;			// 下一个请求玩家座位
 	optional uint32 currentPosition = 6;		// 当前请求玩家座位
+	optional uint32 number = 7;					// 当前玩家剩余牌数
 }
 
 // 请求地主

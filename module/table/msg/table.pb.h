@@ -597,6 +597,13 @@ class PlayResp : public ::google::protobuf::Message /* @@protoc_insertion_point(
   ::google::protobuf::uint32 currentposition() const;
   void set_currentposition(::google::protobuf::uint32 value);
 
+  // optional uint32 number = 7;
+  bool has_number() const;
+  void clear_number();
+  static const int kNumberFieldNumber = 7;
+  ::google::protobuf::uint32 number() const;
+  void set_number(::google::protobuf::uint32 value);
+
   // @@protoc_insertion_point(class_scope:zhu.table.PlayResp)
  private:
   void set_has_playresult();
@@ -611,6 +618,8 @@ class PlayResp : public ::google::protobuf::Message /* @@protoc_insertion_point(
   void clear_has_nextposition();
   void set_has_currentposition();
   void clear_has_currentposition();
+  void set_has_number();
+  void clear_has_number();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   ::google::protobuf::internal::HasBits<1> _has_bits_;
@@ -621,6 +630,7 @@ class PlayResp : public ::google::protobuf::Message /* @@protoc_insertion_point(
   int playresult_;
   ::google::protobuf::uint32 nextposition_;
   ::google::protobuf::uint32 currentposition_;
+  ::google::protobuf::uint32 number_;
   friend struct protobuf_table_2eproto::TableStruct;
 };
 // -------------------------------------------------------------------
@@ -1704,6 +1714,30 @@ inline void PlayResp::set_currentposition(::google::protobuf::uint32 value) {
   set_has_currentposition();
   currentposition_ = value;
   // @@protoc_insertion_point(field_set:zhu.table.PlayResp.currentPosition)
+}
+
+// optional uint32 number = 7;
+inline bool PlayResp::has_number() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void PlayResp::set_has_number() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void PlayResp::clear_has_number() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void PlayResp::clear_number() {
+  number_ = 0u;
+  clear_has_number();
+}
+inline ::google::protobuf::uint32 PlayResp::number() const {
+  // @@protoc_insertion_point(field_get:zhu.table.PlayResp.number)
+  return number_;
+}
+inline void PlayResp::set_number(::google::protobuf::uint32 value) {
+  set_has_number();
+  number_ = value;
+  // @@protoc_insertion_point(field_set:zhu.table.PlayResp.number)
 }
 
 // -------------------------------------------------------------------

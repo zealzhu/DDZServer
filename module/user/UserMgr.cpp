@@ -166,9 +166,9 @@ void zhu::CUserMgr::Login(int iSocket, LOGIN_PTR pLoginMsg)
 	PLAYER_PTR pPlayer = CUserDao::Instance().GetPlayer(pLoginMsg->account().c_str(), pLoginMsg->password().c_str());
 	if (pPlayer->id() > 0)
 	{
-		// 检查是否已经在线
-		//if (pPlayer->status() == nd::user::UserStatus::ONLINE) {
-		//	pLoginResult->set_loginresult(nd::user::ERROR_CODE::ALREADY_LOGON);
+		//// 检查是否已经在线
+		//if (pPlayer->status() == zhu::user::UserStatus::ONLINE) {
+		//	pLoginResult->set_loginresult(zhu::user::ERROR_CODE::ALREADY_LOGON);
 		//	pLoginResult->set_desc("the account has been logined");
 		//	logger_error("uer account {} login failed", pLoginMsg->account());
 		//	pPayload->set_message_data(pLoginResult->SerializeAsString());
@@ -219,6 +219,7 @@ void zhu::CUserMgr::Login(int iSocket, LOGIN_PTR pLoginMsg)
 		logger_error("uer account {} login failed", pLoginMsg->account());
 		pPayload->set_message_data(pLoginResult->SerializeAsString());
 		CMsgMgr::getInstance().insertResponseMsg(pPayload);
+		return;
 	}
 
 	pPlayer->set_socket(iSocket);

@@ -250,8 +250,10 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 		// 能够不出
 		if (pTable->CanNoPlay()) {
 			pTable->ChangeToNextPlayerRequest();
+
 			pPlayResp->set_playresult(table::ERROR_CODE::NO_PLAY);
 			pPlayResp->set_next(pTable->GetCurrentRequestPlayerAccount());
+			pPlayResp->set_nextposition(pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(pTable->GetCurrentRequestPlayerAccount()))->position());
 			pPlayResp->set_desc("no play");
 			logger_info("{} {}", pPlayReq->account(), pPlayResp->desc());
 			pPayload->set_message_data(pPlayResp->SerializeAsString());
@@ -297,12 +299,13 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 		pTable->RemovePokers(player, pPlayReq->pokers());
 	}
 
-	// 发送出的牌给其他玩家
+	// 发送出的牌给所有玩家
 	std::shared_ptr<zhu::SelfDescribingMessage> pDispatchPaload(NEW_ND zhu::SelfDescribingMessage());
 	std::shared_ptr<DispatchPoker> pDispatchPokerMsg(NEW_ND DispatchPoker());
 	pDispatchPaload->set_type_name(pDispatchPokerMsg->GetTypeName());
 	pDispatchPokerMsg->set_landlordaccount(pPlayReq->account());// 设置出牌的账号
 	pDispatchPokerMsg->set_type(DispatchPokerType::PLAYER_POKER);
+	pDispatchPaload->add_socket(iSocket);
 	// 赋值牌的信息
 	for (auto it = pPlayReq->pokers().begin(); pPlayReq->pokers().end() != it; it++) {
 		auto pPocker = pDispatchPokerMsg->add_pockers();
@@ -317,6 +320,22 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	// 通知出牌成功
 	NotifyListennersPlaySuccess(pPlayReq->roomid(), pTable, pPlayReq->type());
 
+	// 发送成功消息
+	pTable->ChangeToNextPlayerRequest();
+	auto nextAccount = pTable->GetCurrentRequestPlayerAccount();
+	pPlayResp->set_playresult(table::ERROR_CODE::SUCCESS);
+	
+	pPlayResp->set_next(nextAccount);
+	pPlayResp->set_nextposition(pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(nextAccount))->position());
+	pPlayResp->set_desc("play success");
+	pPlayResp->set_number(pTable->GetPlayerPockerNumber(pTable->GetPlayerByAccount(pPlayReq->account())));
+	logger_info("{} {}", pPlayReq->account(), pPlayResp->desc());
+	pPayload->set_message_data(pPlayResp->SerializeAsString());
+	SendResponseToOtherPlayer(pPayload, player, pTable);
+
+	// 更新当前玩家的手牌
+	ShowCurrentPoker(pTable->GetPlayerByAccount(pPlayReq->account()), pTable);
+
 	// 判断是否打完牌
 	if (pTable->GetPlayerPockerNumber(player) == 0) {
 		if (pTable->GetLandlordPlayerAccount() == pPlayReq->account()) {
@@ -328,27 +347,13 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 			pPlayResp->set_playresult(table::ERROR_CODE::PEASANT_WIN);
 			logger_info("peasant win the game");
 			NotifyListennersPlayOver(pPlayReq->roomid(), pTable, false);
-		}			
+		}
 		pPlayResp->set_account(pTable->GetLandlordPlayerAccount());	//设置地主账号
-		pPlayResp->set_desc("game over");		
+		pPlayResp->set_desc("game over");
 		pPayload->set_message_data(pPlayResp->SerializeAsString());
-		SendResponseToOtherPlayer(pPayload, player, pTable);		
+		SendResponseToOtherPlayer(pPayload, player, pTable);
 		return;
 	}
-
-	// 发送成功消息
-	pTable->ChangeToNextPlayerRequest();
-	pPlayResp->set_playresult(table::ERROR_CODE::SUCCESS);
-	auto nextAccount = pTable->GetCurrentRequestPlayerAccount();
-	pPlayResp->set_next(nextAccount);
-	pPlayResp->set_nextposition(pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(nextAccount))->position());
-	pPlayResp->set_desc("play success");
-	logger_info("{} {}", pPlayReq->account(), pPlayResp->desc());
-	pPayload->set_message_data(pPlayResp->SerializeAsString());
-	SendResponseToOtherPlayer(pPayload, player, pTable);
-
-	// 发送下一位玩家的牌
-	ShowCurrentPoker(pTable->GetCurrentRequestPlayer(), pTable);
 }
 
 void zhu::CTableMgr::Deal(TABLE_PTR pTable, string strAccount, Player player)
