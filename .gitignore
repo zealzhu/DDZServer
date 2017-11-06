@@ -289,3 +289,6 @@ __pycache__/
 
 # boost
 /include/boost
+
+!/lib/libprotobuf/debug
+!/lib/libprotobuf/release
