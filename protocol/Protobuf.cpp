@@ -107,9 +107,9 @@ const char* CProtobuf::Encode(const google::protobuf::Message& pMessage, int& iB
 	// 清零
 	ZeroMemory(pBuf, iBufSize);
 	// 将本地字节流转换为网络字节流
-	//logger_debug("send byte size：{}", pMessage.ByteSize());
+	logger_debug("send byte size：{}", pMessage.ByteSize());
 	unsigned int iNumber = htonl(pMessage.ByteSize());
-	//logger_debug("htonl size：{}", iNumber);
+	logger_debug("htonl size：{}", iNumber);
 	// 头四个字节用来存储数据包大小
 	memcpy(pBuf, &iNumber, HEADERRSIZE);
 	// 以下就是将protobuf数据序列化到内存中

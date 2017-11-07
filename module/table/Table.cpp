@@ -469,6 +469,19 @@ bool zhu::CTable::ComparePlayPokers(table::PLAY_TYPE type, const google::protobu
 		bSuccess = true;
 		break;
 	case zhu::table::BOMB:
+		// 上次也是炸弹则要比较大小
+		if (type == m_lastPlayType) {
+			if (iFirstPokerValue > m_vecLastPlayPokersValue[0])
+				bSuccess = true;
+			else
+				bSuccess = false;
+		}
+		// 否则直接成功
+		else {
+			bSuccess = true;
+		}
+			
+		break;
 	case zhu::table::SINGLE:
 	case zhu::table::DOUBLE_SAME:
 	case zhu::table::THREE_SAME:
