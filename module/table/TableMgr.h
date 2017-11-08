@@ -50,8 +50,8 @@ namespace zhu {
 		public IRoomStatusChangeEvent
 	{
 		// roomid <=> Table
-		typedef map<int, TABLE_PTR> TABLE_MAP;
-		typedef map<int, TABLE_PTR>::iterator TABLE_MAP_ITER;
+		typedef map<ROOM_PTR, TABLE_PTR> TABLE_MAP;
+		typedef map<ROOM_PTR, TABLE_PTR>::iterator TABLE_MAP_ITER;
 
 		//出牌状态监听集合
 		typedef std::list< std::shared_ptr<IPlayPokerEvent> > PLAY_POKER_LISTENNER_LIST;
@@ -100,7 +100,7 @@ namespace zhu {
 		// ------------------------------------------------------------------------
 		// Description: 房间销毁
 		// ------------------------------------------------------------------------
-		virtual void RoomDestory(const int iRoomId) override;
+		virtual void RoomDestory(ROOM_PTR pRoom) override;
 
 		// ------------------------------------------------------------------------
 		// Description: 房间人数改变
@@ -120,7 +120,7 @@ namespace zhu {
 		// ------------------------------------------------------------------------
 		// Description: 房间创建
 		// ------------------------------------------------------------------------
-		virtual void RoomCreate(const int iRoomId) override;
+		virtual void RoomCreate(ROOM_PTR pRoom) override;
 
 		void AddListener(std::shared_ptr<IPlayPokerEvent> pListenner)
 		{
@@ -158,6 +158,10 @@ namespace zhu {
 		// 发送响应消息给其他用户
 		void SendResponseToOtherPlayer(std::shared_ptr<zhu::SelfDescribingMessage>, 
 			Player callPlayer, TABLE_PTR pTable);
+
+
+		TABLE_PTR GetTable(int iRoomId);
+		ROOM_PTR GetRoom(int iRoomId);
 
 	private:
 		TABLE_MAP m_mapTables;

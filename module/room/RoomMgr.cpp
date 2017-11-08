@@ -84,49 +84,62 @@ void zhu::CRoomMgr::ConnectionClosed(SocketLib::DataSocket sock)
 {
 	// 遍历所有房间查看关闭的连接是否在房间中，如果在则退出房间
 	for (ROOM_ITER it = m_mapRooms.begin(); m_mapRooms.end() != it; it++) {
-		zhu::room::Seat* seat1 = it->second->mutable_seat1();
-		zhu::room::Seat* seat2 = it->second->mutable_seat2();
-		zhu::room::Seat* seat3 = it->second->mutable_seat3();
+		auto pRoom = it->second;
+		zhu::room::Seat* seat1 = pRoom->mutable_seat1();
+		zhu::room::Seat* seat2 = pRoom->mutable_seat2();
+		zhu::room::Seat* seat3 = pRoom->mutable_seat3();
 
 		if (seat1->socket() == sock.GetSock()) {
 			logger_info("{} disconnect, leave room {}", seat1->playeraccount(), it->first);
 			seat1->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
-			it->second->set_usercount(it->second->usercount() - 1);
-			NotifyRoomListennersUserCountChange(it->first, it->second->usercount());
+			pRoom->set_usercount(pRoom->usercount() - 1);
+			NotifyRoomListennersUserCountChange(it->second, it->second->usercount());
+			// 判断房间还有没有人,没人就关掉了，否则通知其他人玩家退出房间
+			if (!CheckRoomShouldBeClose(pRoom)) {
+				SendOtherPlayerStatuChange(pRoom, seat1->position());
+			}
 		}
 		else if (seat2->socket() == sock.GetSock()) {
 			logger_info("{} disconnect, leave room {}", seat2->playeraccount(), it->first);
 			seat2->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
-			it->second->set_usercount(it->second->usercount() - 1);
-			NotifyRoomListennersUserCountChange(it->first, it->second->usercount());
+			pRoom->set_usercount(pRoom->usercount() - 1);
+			NotifyRoomListennersUserCountChange(it->second, pRoom->usercount());
+			// 判断房间还有没有人,没人就关掉了，否则通知其他人玩家退出房间
+			if (!CheckRoomShouldBeClose(pRoom)) {
+				SendOtherPlayerStatuChange(pRoom, seat2->position());
+			}
 		}
 		else if (seat3->socket() == sock.GetSock()) {		
 			logger_info("{} disconnect, leave room {}", seat2->playeraccount(), it->first);
 			seat3->set_statu(zhu::room::Seat::SeatStatus::Seat_SeatStatus_NO_PLAYER);
-			it->second->set_usercount(it->second->usercount() - 1);
-			NotifyRoomListennersUserCountChange(it->first, it->second->usercount());
+			pRoom->set_usercount(pRoom->usercount() - 1);
+			NotifyRoomListennersUserCountChange(it->second, pRoom->usercount());
+			// 判断房间还有没有人,没人就关掉了，否则通知其他人玩家退出房间
+			if (!CheckRoomShouldBeClose(pRoom)) {
+				SendOtherPlayerStatuChange(pRoom, seat3->position());
+			}
 		}
 
 		// 检查是否关闭房间
-		if (CheckRoomShouldBeClose(it->second))
+		if (CheckRoomShouldBeClose(pRoom))
 			break;
 	}
 }
 
-void zhu::CRoomMgr::NotifyRoomListennersUserCountChange(const int iRoomId, const int iUserCount)
+void zhu::CRoomMgr::NotifyRoomListennersUserCountChange(ROOM_PTR pRoom, const int iUserCount)
 {
 	if (iUserCount == 0) {
 		// 房间人数为0的时候发送房间销毁
 		for each (auto listener in m_listenerList)
 		{
-			listener->RoomDestory(iRoomId);
+			listener->RoomDestory(pRoom);
 		}
 	}
 	else {
 		// 房间人数改变
 		for each (auto listener in m_listenerList)
 		{
-			listener->RoomUserNumberChange(m_mapRooms[iRoomId], iUserCount);
+			listener->RoomUserNumberChange(pRoom, iUserCount);
 		}
 	}
 }
@@ -155,11 +168,11 @@ void zhu::CRoomMgr::NotifyRoomListennersRoomNumberChange(const int iRoomNumber)
 	}
 }
 
-void zhu::CRoomMgr::NotifyRoomListennersRoomCreate(const int iRoomNumber)
+void zhu::CRoomMgr::NotifyRoomListennersRoomCreate(ROOM_PTR pRoom)
 {
 	for each (auto listener in m_listenerList)
 	{
-		listener->RoomCreate(iRoomNumber);
+		listener->RoomCreate(pRoom);
 	}
 }
 
@@ -214,7 +227,7 @@ void zhu::CRoomMgr::Create(int iSocket, CREATE_ROOM_PTR pCreateRoomMsg)
 	// 通知其他模块房间数量改变
 	NotifyRoomListennersRoomNumberChange(m_mapRooms.size());
 	// 通知创建了一个房间
-	NotifyRoomListennersRoomCreate(pRoom->id());
+	NotifyRoomListennersRoomCreate(pRoom);
 }
 
 void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
@@ -271,7 +284,7 @@ void zhu::CRoomMgr::Enter(int iSocket, ENTER_ROOM_PTR pEnterRoomMsg)
 		CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 		// 通知房间人数改变
-		NotifyRoomListennersUserCountChange(pEnterRoomMsg->roomid(), pRoom->usercount());
+		NotifyRoomListennersUserCountChange(pRoom, pRoom->usercount());
 		SendOtherPlayerStatuChange(pRoom, iPosition);
 
 		return;
@@ -335,7 +348,7 @@ void zhu::CRoomMgr::Leave(int iSocket, LEAVE_ROOM_PTR pLeaveRoomMsg)
 	CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 	// 通知房间人数改变
-	NotifyRoomListennersUserCountChange(pLeaveRoomMsg->roomid(), pRoom->usercount());
+	NotifyRoomListennersUserCountChange(pRoom, pRoom->usercount());
 }
 
 void zhu::CRoomMgr::Get(int iSocket, GET_ROOM_PTR pGetRoomMsg)

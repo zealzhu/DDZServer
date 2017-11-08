@@ -54,10 +54,10 @@ void zhu::CTableMgr::RoomNumberChange(const int iRoomNumber)
 	// 房间数量改变
 }
 
-void zhu::CTableMgr::RoomDestory(const int iRoomId)
+void zhu::CTableMgr::RoomDestory(ROOM_PTR pRoom)
 {
 	// 房间销毁移除对应桌子
-	m_mapTables.erase(iRoomId);
+	m_mapTables.erase(pRoom);
 }
 
 void zhu::CTableMgr::RoomUserNumberChange(ROOM_PTR pRoom, const int iUserNumber)
@@ -114,9 +114,11 @@ void zhu::CTableMgr::RoomUserNumberChange(ROOM_PTR pRoom, const int iUserNumber)
 			CMsgMgr::getInstance().insertResponseMsg(pPayload);
 
 			// 清扫牌桌
-			auto pTable = m_mapTables[pRoom->id()];
+			auto pTable = m_mapTables[pRoom];
 			pTable->Clear();
 			pTable->ClearSeat();	
+
+			pRoom->set_status(zhu::room::RoomStatus::WAIT);
 
 			// 通知离开牌桌
 			NotifyListennersLeaveTable(pRoom->id(), pTable);
@@ -137,7 +139,7 @@ void zhu::CTableMgr::RoomStart(ROOM_PTR pRoom)
 	room::Seat* pSeat3 = pRoom->mutable_seat3();
 
 	// 房间对应桌子
-	TABLE_PTR pTable = m_mapTables[pRoom->id()];
+	TABLE_PTR pTable = m_mapTables[pRoom];
 
 	// 添加玩家到桌子上
 	pTable->AddPlayer(Player::PLAYER_1, pSeat1);
@@ -153,19 +155,19 @@ void zhu::CTableMgr::RoomStart(ROOM_PTR pRoom)
 void zhu::CTableMgr::RoomOver(ROOM_PTR pRoom)
 {
 	// 游戏结束清扫桌子座位玩家
-	auto pTable = m_mapTables[pRoom->id()];
+	auto pTable = m_mapTables[pRoom];
 	pTable->ClearSeat();
 
 	// 通知离开牌桌
 	NotifyListennersLeaveTable(pRoom->id(), pTable);
 }
 
-void zhu::CTableMgr::RoomCreate(const int iRoomId)
+void zhu::CTableMgr::RoomCreate(ROOM_PTR pRoom)
 {
 	// 创建一张桌子并初始化牌
 	TABLE_PTR pTable(NEW_ND CTable);
 	pTable->Init();
-	m_mapTables[iRoomId] = pTable;
+	m_mapTables[pRoom] = pTable;
 }
 
 void zhu::CTableMgr::NotifyListennersRequestLandlord(int iRoomId, TABLE_PTR pTable, bool bRequest)
@@ -240,14 +242,15 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	pPayload->set_type_name(pPlayResp->GetTypeName());
 	pPayload->add_socket(iSocket);
 
-	TABLE_PTR pTable = m_mapTables[pPlayReq->roomid()];
+	TABLE_PTR pTable = GetTable(pPlayReq->roomid());
+	int curPos = pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(pPlayReq->account()))->position();
 	Player player = pTable->GetPlayerByAccount(pPlayReq->account());
 	pPlayResp->set_account(pPlayReq->account());
-	pPlayResp->set_currentposition(pTable->GetSeatByPlayer(pTable->GetPlayerByAccount(pPlayReq->account()))->position());
+	pPlayResp->set_currentposition(curPos);
 
 	// 判断是否不出
 	if (pPlayReq->type() == table::PLAY_TYPE::NO_PLAYER) {
-		// 能够不出
+		// 与第一次请求不一样或者不能大过就能不出
 		if (pTable->CanNoPlay()) {
 			pTable->ChangeToNextPlayerRequest();
 
@@ -276,7 +279,8 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	}
 
 	// 比较与最后一次出牌的牌型比较
-	if (!pTable->ComparePlayType(pPlayReq->type())) {
+	bool bCompareType = pTable->ComparePlayType(pPlayReq->type());
+	if (!bCompareType) {
 		pPlayResp->set_playresult(ERROR_CODE::PLAY_TYPE_ERROR);
 		pPlayResp->set_desc("play type error");
 		logger_error("{} {}", pPlayReq->account(), pPlayResp->desc());
@@ -286,7 +290,8 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	}
 
 	// 比较能否大过
-	if (!pTable->ComparePlayPokers(pPlayReq->type(), pPlayReq->pokers())) {
+	bool bCanBig = pTable->ComparePlayPokers(pPlayReq->type(), pPlayReq->pokers());
+	if (!bCanBig) {
 		pPlayResp->set_playresult(ERROR_CODE::COMPARE_LOSE);
 		pPlayResp->set_desc("play not enough big");
 		logger_error("{} {}", pPlayReq->account(), pPlayResp->desc());
@@ -305,6 +310,7 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 	pDispatchPaload->set_type_name(pDispatchPokerMsg->GetTypeName());
 	pDispatchPokerMsg->set_landlordaccount(pPlayReq->account());// 设置出牌的账号
 	pDispatchPokerMsg->set_type(DispatchPokerType::PLAYER_POKER);
+	pDispatchPokerMsg->set_position(curPos);
 	pDispatchPaload->add_socket(iSocket);
 	// 赋值牌的信息
 	for (auto it = pPlayReq->pokers().begin(); pPlayReq->pokers().end() != it; it++) {
@@ -348,6 +354,12 @@ void zhu::CTableMgr::Play(int iSocket, PLAY_REQ pPlayReq)
 			logger_info("peasant win the game");
 			NotifyListennersPlayOver(pPlayReq->roomid(), pTable, false);
 		}
+		
+		// 更改房间状态
+		auto pRoom = GetRoom(pPlayReq->roomid());
+		if (pRoom != NULL)
+			pRoom->set_status(room::RoomStatus::FULL);
+
 		pPlayResp->set_account(pTable->GetLandlordPlayerAccount());	//设置地主账号
 		pPlayResp->set_desc("game over");
 		pPayload->set_message_data(pPlayResp->SerializeAsString());
@@ -446,7 +458,7 @@ void zhu::CTableMgr::RequestLandlord(int iSocket, REQUEST_LANDLORD_REQ pMsg)
 	pPayload->add_socket(iSocket);
 
 	// 对应桌子
-	auto pTable = m_mapTables[pMsg->roomid()];
+	auto pTable = GetTable(pMsg->roomid());
 
 	// 对应玩家
 	Player player = pTable->GetPlayerByAccount(pMsg->account());
@@ -536,5 +548,23 @@ void zhu::CTableMgr::SendResponseToOtherPlayer(std::shared_ptr<zhu::SelfDescribi
 
 	// 发送响应消息
 	CMsgMgr::getInstance().insertResponseMsg(pMsg);
+}
+
+zhu::TABLE_PTR zhu::CTableMgr::GetTable(int iRoomId)
+{
+	for (auto room : m_mapTables) {
+		if (room.first->id() == iRoomId)
+			return room.second;
+	}
+	return NULL;
+}
+
+zhu::ROOM_PTR zhu::CTableMgr::GetRoom(int iRoomId)
+{
+	for (auto room : m_mapTables) {
+		if (room.first->id() == iRoomId)
+			return room.first;
+	}
+	return NULL;
 }
 

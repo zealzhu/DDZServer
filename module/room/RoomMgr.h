@@ -39,10 +39,10 @@ namespace zhu {
 		virtual void RoomNumberChange(const int iRoomNumber) = 0;
 
 		// 房间创建
-		virtual void RoomCreate(const int iRoomId) = 0;
+		virtual void RoomCreate(ROOM_PTR pRoom) = 0;
 
 		// 房间销毁
-		virtual void RoomDestory(const int iRoomId) = 0;
+		virtual void RoomDestory(ROOM_PTR pRoom) = 0;
 
 		// 房间人数改变
 		virtual void RoomUserNumberChange(ROOM_PTR pRoom, const int iUserNumber) = 0;
@@ -109,7 +109,7 @@ namespace zhu {
 		// ------------------------------------------------------------------------
 		// Description: 通知所有房间监听者房间人数改变
 		// ------------------------------------------------------------------------
-		void NotifyRoomListennersUserCountChange(const int iRoomId, const int iUserCount);
+		void NotifyRoomListennersUserCountChange(ROOM_PTR pRoom, const int iUserCount);
 
 		// ------------------------------------------------------------------------
 		// Description: 通知所有房间监听者房间游戏状态改变
@@ -124,7 +124,7 @@ namespace zhu {
 		// ------------------------------------------------------------------------
 		// Description: 通知所有房间监听者创建了一个房间
 		// ------------------------------------------------------------------------
-		void NotifyRoomListennersRoomCreate(const int iRoomNumber);
+		void NotifyRoomListennersRoomCreate(ROOM_PTR pRoom);
 
 	private:
 		// 创建房间

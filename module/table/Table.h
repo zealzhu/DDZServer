@@ -165,7 +165,6 @@ namespace zhu {
 		table::PLAY_TYPE m_lastPlayType;				// 最后一次出牌类型
 
 		Player m_lastPlayPlayer;						// 最后一次出牌玩家
-
 	};
 }
 
