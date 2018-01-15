@@ -7,8 +7,8 @@
  */
 #include "Protocol.h"
 #include <tools/GameLog.h>
-#include <BaseMsg.pb.h>
 #include <msg/MessageManager.h>
+#include <google/protobuf/descriptor.h>
 
 namespace ProtocolLib
 {
@@ -22,7 +22,7 @@ void Protocol::Translate(GameSocketLib::gsocket sock, const char * buffer, unsig
     MessageManager::Instance().InsertReceiveMessage(msg);
 }
 
-Protocol::MessagePtr Protocol::Decode(GameSocketLib::gsocket sock, const char * buffer, unsigned int size)
+MessagePtr Protocol::Decode(GameSocketLib::gsocket sock, const char * buffer, unsigned int size)
 {
     // 反序列化
     std::shared_ptr<zhu::SelfDescribingMessage> message(new zhu::SelfDescribingMessage());
@@ -59,10 +59,64 @@ unsigned int Protocol::ReadHead(const char * buff, unsigned int size)
     return should_read_size;
 }
 
+MessagePtr Protocol::ParseInnerMsg(OutterMessagePtr outter_msg, ErrorCode * error_code)
+{
+    // 创建一条对应消息
+    MessagePtr msg(CreateMessage(outter_msg->type_name()));
+
+    if(msg)
+    {
+        if(msg->ParseFromString(outter_msg->message_data()))
+        {
+            // 转换成功
+            *error_code = ErrorCode::kSuccess;
+            logger_debug("内部消息类型：{}", msg->GetTypeName());
+            logger_debug("DebugString: {}", msg->DebugString());
+
+        }
+        else
+        {
+            *error_code = ErrorCode::kParseError;
+        }
+    }
+    else
+    {
+        *error_code = ErrorCode::kUnknownMessageType;
+    }
+    return msg;
+}
 
 google::protobuf::Message * Protocol::CreateMessage(const std::string & type_name)
 {
+    // 利用反射机制通过类型名字创建对应消息
+    google::protobuf::Message * msg = nullptr;
+    auto descriptor =
+        google::protobuf::DescriptorPool::generated_pool()->FindMessageTypeByName(type_name);
 
+    if(descriptor)
+    {
+        auto prototype = google::protobuf::MessageFactory::generated_factory()->GetPrototype(descriptor);
+        if(prototype)
+        {
+            // 创建对应的消息
+            msg = prototype->New();
+        }
+    }
+
+    return msg;
+}
+
+std::string Protocol::ErrorToString(const ErrorCode & error_code)
+{
+    switch(error_code)
+    {
+    case ErrorCode::kParseError:
+        return "解析失败";
+    case ErrorCode::kUnknownMessageType:
+        return "未知消息类型";
+    default:
+        return "未知错误";
+    }
 }
 }
 
