@@ -1,0 +1,6 @@
+[submodule "opt/inih"]
+	path = opt/inih
+	url = https://github.com/benhoyt/inih.git
+[submodule "opt/spdlog"]
+	path = opt/spdlog
+	url = https://github.com/gabime/spdlog.git

@@ -1,419 +1,105 @@
-// MUD Programming
-// Ron Penton
-// (C)2003
-// ConnectionManager.h - The class that will manage connections.
+/**
+ * @file ConnectionManager.h
+ * @brief è¿æ¥ç®¡ç†å™¨
+ * @author zhu peng cheng
+ * @version 1.0
+ * @date 2018-01-05
+ */
+#ifndef _CONNECTION_MANAGER_H
+#define _CONNECTION_MANAGER_H
 
-#ifndef CONNECTIONMANAGER_H
-#define CONNECTIONMANAGER_H
-
-#include <list>
-#include <iostream>
-#include "../thread/ThreadLib.h"
-#include "SocketLibTypes.h"
-#include "SocketLibErrors.h"
-#include "SocketSet.h"
+#include "GameSocket.h"
+#include "GameSocketSet.h"
 #include "Connection.h"
-#include "../basic/GameLog.h"
+#include <list>
 
-namespace SocketLib
+namespace GameSocketLib
 {
 
-class IConnectionEvent
-{
-public:
-
-	virtual void ConnectionClosed(DataSocket socket) = 0;
-
-};
-
-// Forward Declarations
-template<typename protocol>
-class ProtobufConnection;
-
-
-
-// ============================================================================
-// Description: This connection manager class will manage connections, 
-// all identified with an ID. 
-// ============================================================================
-template<typename protocol>
 class ConnectionManager
 {
-
-    typedef std::list< ProtobufConnection<protocol> > clist;
-    typedef typename std::list< ProtobufConnection<protocol> >::iterator clistitr;
-
-	typedef std::list< std::shared_ptr<IConnectionEvent> > listennerlist;
-	typedef typename std::list< std::shared_ptr<IConnectionEvent> >::iterator listennerlistitr;
-
+    typedef std::list<Connection> CONNECTION_LIST;
+    typedef std::list<Connection>::iterator CONNECTION_ITER;
 public:
+    ConnectionManager();
 
-    // ------------------------------------------------------------------------
-	//  Í¨¹ı×î´ó´«ÊäËÙÂÊ¡¢´«Êä´óĞ¡ºÍ·¢ËÍÊ±³¤À´´´½¨Ò»¸öÁ¬½Ó¹ÜÀíÆ÷
-    // ------------------------------------------------------------------------
-    ConnectionManager( int p_maxdatarate = 1024,    // 1 kbyte/second
-                       int p_sentimeout = 60,       // 60 seconds
-                       int p_maxbuffered = 8192 );  // 8 kbytes
+    /**
+     * @brief æ·»åŠ è¿æ¥
+     *
+     * @param sock
+     */
+    void AddConnection(DataSocket & sock);
 
-    // ------------------------------------------------------------------------
-    //  Ïú»ÙÁ¬½Ó¹ÜÀíÆ÷£¬ÊÍ·ÅËùÓĞÁ¬½Ó
-    // ------------------------------------------------------------------------
-    ~ConnectionManager();
-
-
-    // ------------------------------------------------------------------------
-    //  Í¨ÖªÁ¬½Ó¹ÜÀíÓĞĞÂµÄÁ¬½Ó
-    // ------------------------------------------------------------------------
-    void NewConnection( DataSocket& p_socket );
-
-
-    // ------------------------------------------------------------------------
-    //  »ñÈ¡µ±Ç°Ê£Óà¿ÉÓÃµÄÁ¬½ÓÊı
-    // ------------------------------------------------------------------------
+    /**
+     * @brief è·å–å‰©ä½™è¿æ¥æ•°
+     *
+     * @return
+     */
     inline int AvailableConnections() const
     {
-        return MAX - (int)m_connections.size();
+        return MAX - this->connection_list_.size();
     }
 
-    // ------------------------------------------------------------------------
-    //  »ñÈ¡µ±Ç°Á¬½ÓÊı
-    // ------------------------------------------------------------------------
+    /**
+     * @brief è·å–å½“å‰å·²è¿æ¥æ•°
+     *
+     * @return
+     */
     inline int TotalConnections() const
     {
-        return (int)m_connections.size();
+        return this->connection_list_.size();
     }
 
-    // ------------------------------------------------------------------------
-    //  ÊÍ·ÅÎŞĞ§Á¬½Ó
-    // ------------------------------------------------------------------------
-    void CloseConnections();
+    /**
+     * @brief å¯¹æ‰€æœ‰è¿æ¥çš„ç»Ÿä¸€ç®¡ç†,æ‰§è¡Œ:
+     * 1ã€æ¥æ”¶
+     * 2ã€å‘é€
+     * 3ã€å…³é—­
+     */
+    inline void Manager()
+    {
+        this->Recv();
+        this->Send();
+        this->CloseConnections();
+    }
 
+    /**
+     * @brief å‘é€æ¶ˆæ¯åˆ°åŒ¹é…åˆ°çš„è¿æ¥ç¼“å­˜
+     *
+     * @param sock
+     * @param msg
+     */
+    void SendMsg(gsocket sock, void * msg);
 
-    // ------------------------------------------------------------------------
-    //  ¼àÌıËùÓĞÁ¬½Ó×´Ì¬£¬ÊÇ·ñÓĞÊı¾İĞèÒª½ÓÊÕ
-    // ------------------------------------------------------------------------
-    void Listen();
+protected:
+    /**
+     * @brief ç›‘å¬æ˜¯å¦æœ‰æ•°æ®éœ€è¦æ¥æ”¶è¿›è¡Œæ¥æ”¶
+     */
+    void Recv();
 
-    // ------------------------------------------------------------------------
-    // Description: ½«ËùÓĞµÄ»º´æÊı¾İ¶¼·¢ËÍ
-    // ------------------------------------------------------------------------
+    /**
+     * @brief éå†æ‰€æœ‰è¿æ¥å‘é€æ‰€æœ‰ç¼“å­˜
+     */
     void Send();
 
-    // ------------------------------------------------------------------------
-	// 1¡¢¼ì²âÁ¬½ÓµÄsocketÊÇ·ñ½ÓÊÕµ½ĞÂÊı¾İ£¬ÓĞµÄ»°½ÓÊÕÊı¾İ²¢·ÅÈëÏûÏ¢¶ÓÁĞ
-	// 2¡¢½«»º´æµÄÊı¾İÍ¨¹ısocket·¢ËÍ³öÈ¥
-	// 3¡¢¹Ø±ÕÇåÀíÎŞĞ§µÄsocket
-	// ps£ºÒòÎªÊÇ·Ç×èÈûÄ£Ê½£¬ËùÒÔ²»»á×èÈû
-    // ------------------------------------------------------------------------
-    inline void Manage()
-    {
-        Listen();
-        Send();
-        CloseConnections();
-    }
+    /**
+     * @brief éå†æ‰€æœ‰è¿æ¥åˆ¤æ–­è¿æ¥çš„å…³é—­æ ‡è®°æ˜¯å¦ä¸ºtrueè¿›è¡Œå…³é—­,é€»è¾‘ä¸Šå…³é—­
+     */
+    void CloseConnections();
 
-	// ------------------------------------------------------------------------
-	// Description: ·¢ËÍÊı¾İµ½Ö¸¶¨socket
-	// ------------------------------------------------------------------------
-	void SendMsg(int iSocket, void* pMsg);
-
-	// ------------------------------------------------------------------------
-	// Description: Ìí¼ÓÁ¬½ÓÊÂ¼ş¹Û²ìÕß
-	// ------------------------------------------------------------------------
-	void AddListener(std::shared_ptr<IConnectionEvent> pListenner)
-	{
-		m_listenners.push_back(pListenner);
-	}
-
-	// ------------------------------------------------------------------------
-	// Description: Í¨ÖªËùÓĞ¹Û²ìÕß
-	// ------------------------------------------------------------------------
-	void NotifyListenners(clistitr p_itr);
-
-protected:
-    // ------------------------------------------------------------------------
-    //  This closes a connection within the connection manager; it is assumed
-    //  that this is an external call- nothing needs to be notified about 
-    //  the connection being closed.
-    // ------------------------------------------------------------------------
-    void Close( clistitr p_itr );
+    /**
+     * @brief ç‰©ç†ä¸Šå¯¹é“¾æ¥è¿›è¡Œå…³é—­
+     *
+     * @param sock
+     */
+    void Close(CONNECTION_ITER iter);
 
 
-
-protected:
-
-    // a list of all the connections within the manager
-    clist m_connections;
-
-    // This is the max allowable receiving datarate of the manager, in bytes per
-    // second.
-    int m_maxdatarate;
-
-    // This is the amount of time in seconds that the manager allows for a socket to
-    // successfully send data before it is forcibly closed.
-    int m_sendtimeout;
-
-    // This is the maximum number of bytes that are allowed to be buffered by
-    // a connection before it is forcibly closed (only determined after a send)
-    int m_maxbuffered;
-
-    // a set of sockets that will be polled for socket activity.
-    SocketSet m_set;
-
-	// a list of all the listenner interest at connection status
-	listennerlist m_listenners;
+private:
+    CONNECTION_LIST connection_list_;
+    GameSocketSet socket_set_;
 };
 
-
-
-
-
-// ------------------------------------------------------------------------
-// This creates a connection manager using a maximum datarate, buffer size,
-// and a send timeout limit.
-// ------------------------------------------------------------------------
-template<typename protocol>
-ConnectionManager<protocol>::
-ConnectionManager( int p_maxdatarate,    
-                   int p_sentimeout,
-                   int p_maxbuffered )
-{
-    m_maxdatarate = p_maxdatarate;
-    m_sendtimeout = p_sentimeout;
-    m_maxbuffered = p_maxbuffered;
 }
 
-// ------------------------------------------------------------------------
-//  Destructs the manager, closing every connection contained within.
-// ------------------------------------------------------------------------
-template<typename protocol>
-ConnectionManager<protocol>::~ConnectionManager()
-{
-    // close every socket in the manager
-    clistitr itr;
-
-    for( itr = m_connections.begin(); itr != m_connections.end(); ++itr )
-        itr->CloseSocket();
-}
-
-
-
-// ------------------------------------------------------------------------
-//  This notifies the manager that there is a new connection available
-// ------------------------------------------------------------------------
-template<typename protocol>
-void ConnectionManager<protocol>::NewConnection( DataSocket& p_socket )
-{
-    // turn the socket into a connection
-	ProtobufConnection<protocol> conn( p_socket );
-
-	// Á¬½ÓÒÑ´ï×î´ó
-    if( AvailableConnections() == 0 )
-    {
-		logger_warn("Connections reach the maximum {}, not accept new connection", MAX);
-
-        // ¹Ø±ÕÁ¬½Ó
-        conn.CloseSocket();
-    }
-    else
-    {
-        // Ìí¼ÓÁ¬½Óµ½m_connections
-        m_connections.emplace_back( conn );
-
-        // »ñÈ¡socketÁ¬½ÓÒıÓÃ£¬²»ÄÜÖ±½ÓÊ¹ÓÃconn£¬ÒòÎªconnÊÇ¾Ö²¿±äÁ¿
-        Connection<protocol>& c = *m_connections.rbegin();
-
-        // ÉèÖÃÁ¬½ÓÎª·Ç×èÈûÄ£Ê½
-        c.SetBlocking( false );
-
-        // ½«¸ÃÁ¬½ÓÌí¼Óµ½set
-        m_set.AddSocket( c );
-    }
-}
-
-
-// ------------------------------------------------------------------------
-//  This physically closes a connection within the connection manager
-// ------------------------------------------------------------------------
-template<typename protocol>
-void ConnectionManager<protocol>::Close( clistitr p_itr )
-{
-	logger_info("connection {}:{} ¹Ø±Õ, sock {}", SocketLib::GetIPString(p_itr->GetRemoteAddress()),
-		p_itr->GetRemotePort(), p_itr->GetSock());
-
-	// notify all listenners connection closed
-	NotifyListenners(p_itr);
-
-    // clear the socket descriptor from the socket set
-    m_set.RemoveSocket( *p_itr );
-	
-    // physically close the connection
-    p_itr->CloseSocket();
-	
-    // erase the connection from the list
-    m_connections.erase( p_itr );
-}
-
-
-
-
-
-// ------------------------------------------------------------------------
-// This determines if any sockets need to be listened on.
-// ------------------------------------------------------------------------
-template<typename protocol>
-void ConnectionManager<protocol>::Listen()
-{
-    int socks = 0;
-    if( TotalConnections() > 0 )
-    {
-        socks = m_set.Poll();
-    }
-
-    // detect if any sockets have action on them
-    if( socks > 0 )
-    {
-
-        // two iterators; c means "current". This is done due to the 
-        // awkward nature of iterating through a map with the 
-        // ability to remove items
-        clistitr itr = m_connections.begin();
-        clistitr c;
-
-        // loop through every connection
-        while( itr != m_connections.end() )
-        {
-            // keep the current connection in "c", and move "itr" to 
-            // the next item
-            c = itr++;
-
-            // check if there is any activity
-            if( m_set.HasActivity( *c ) )
-            {
-                try
-                {
-                    // receive as much data as you can.
-                    c->Receive();
-
-                    // check to see if the connection is flooding.
-                    if( c->GetCurrentDataRate() > m_maxdatarate )
-                    {
-						logger_warn("CurrentDataRate({}) > m_maxdatarate({}), close socket",
-							c->GetCurrentDataRate(), m_maxdatarate);
-                        // too much data was sent, tell the
-                        // protocol handler
-                        c->Close();
-
-                        // close the connection
-                        Close( c );
-                    }
-                }
-
-                // this block catches any fatal exceptions that
-                // were thrown when receiving new data. The only
-                // exceptions thrown are major errors, and the 
-                // socket should immediately be closed. So,
-                // the protocol handler is told that the connection
-                // hung up, and the socket is closed.
-                catch( ... )
-                {
-                    c->Close();
-                    Close( c );
-                }
-
-            }   // end activity check
-
-        }   // end socket loop
-
-    }   // end check for number of sockets returned by select()
-}
-
-
-// ------------------------------------------------------------------------
-// Description: This goes through all the connections and sends all
-//              buffered data.
-// ------------------------------------------------------------------------
-template<typename protocol>
-void ConnectionManager<protocol>::Send()
-{
-    // Ê¹ÓÃÁ½¸öµü´úÆ÷£¬Ò»¸öÖ¸Ïòµ±Ç°Î»ÖÃ£¬Ò»¸öÓÃÀ´ÒÆ¶¯Ö¸ÏòÏÂÒ»¸öÎ»ÖÃ
-    clistitr itr = m_connections.begin();
-    clistitr c;
-
-    // ±éÀúËùÓĞÁ¬½Ó
-    while( itr != m_connections.end() )
-    {
-        c = itr++;
-
-        // now try to send all buffered data on the socket.
-        try
-        {
-            c->SendBuffer();
-
-            // check to see if there are problems sending to the connection
-            // these are usually caused by exploits or client crashes.
-            if( c->GetBufferedBytes() > m_maxbuffered || 
-                c->GetLastSendTime() > m_sendtimeout )
-            {
-                c->Close();
-                Close( c );
-            }
-        }
-        catch( ... )
-        {
-            c->Close();
-            Close( c );
-        }
-    }   // end while-loop
-}
-
-
-
-// ------------------------------------------------------------------------
-//  Goes through all the connections in the manager and checks if they
-//  need to be closed.
-// ------------------------------------------------------------------------
-template<typename protocol>
-void ConnectionManager<protocol>::CloseConnections()
-{
-    clistitr itr = m_connections.begin();
-    clistitr c;
-
-    while( itr != m_connections.end() )
-    {
-        // retain the value of the iterator in "c" while moving "itr" forward
-        c = itr++;
-
-        if( c->Closed() )
-            Close( c );
-    }
-}
-
-template<typename protocol>
-void ConnectionManager<protocol>::SendMsg(int iSocket, void* pMsg)
-{
-	clistitr it = m_connections.begin();
-	while (it != m_connections.end())
-	{
-		if (it->GetSock() == iSocket)
-		{
-			it->Protocol().SendString(*it, pMsg);
-			break;
-		}
-		it++;
-	}
-}
-
-template<typename protocol>
-void ConnectionManager<protocol>::NotifyListenners(clistitr p_itr)
-{
-	for each (auto listener in m_listenners)
-	{
-		listener->ConnectionClosed(*p_itr);
-	}
-}
-
-}   // end namespace SocketLib
-
-#endif
-
+#endif // _CONNECTION_MANAGER_H

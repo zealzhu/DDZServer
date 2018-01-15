@@ -1,0 +1,138 @@
+﻿syntax = "proto2";
+
+package zhu.table;
+
+// 花色
+enum POKER_SUIT {
+    SPADE = 0;// 黑桃
+    HEART = 1;// 红心
+    DIAMOND = 2;// 方块
+    CLUB = 3;// 梅花
+    SMALL_JACKER = 4;// 小王
+    BIG_JACKER = 5;// 大王
+};
+
+// 出牌类型
+enum PLAY_TYPE {
+    DOUBLE_JOCKER = 0;//天王炸：即双王（大王和小王），最大的牌
+    BOMB = 1;//炸弹：四张同数值牌
+    SINGLE = 2;//单牌：单个牌
+    DOUBLE_SAME = 3;//对牌：数值相同的两张牌
+    THREE_SAME = 4;//三张牌：数值相同的三张牌
+    THREE_SAME_WITH_ONE = 5;//三带一单
+    THREE_SAME_WITH_TWO = 6;//三带一对
+    SINGLE_STRAIGHT = 7;//单顺：五张或更多的连续单牌。不包括 2 点和双王
+    DOUBLE_STRAIGHT = 8;//双顺：三对或更多的连续对牌。不包括 2 点和双王
+    BOMB_WIHT_SINGLE = 9;//四带二单
+    BOMB_WIHT_DOUBLE = 10;//四带二双
+    NO_PLAYER = 11;//不出
+    DOUBLE_THREE_SAME = 12;//两对飞机不带
+    DOUBLE_THREE_SAME_WITH_SINGLE = 13;//两对飞机带单牌
+    DOUBLE_THREE_SAME_WITH_DOUBLE = 14;//两对飞机带双牌
+    THREE_THREE_SAME = 15;//三对飞机不带
+    THREE_THREE_SAME_WITH_SINGLE = 16;//三对飞机带单牌
+    THREE_THREE_SAME_WITH_DOUBLE = 17;//三对飞机带双牌
+    FOUR_THREE_SAME = 18;//四对飞机不带
+    FOUR_THREE_SAME_WITH_SINGLE = 19;//四对飞机带单牌
+    FIVE_THREE_SAME = 20;//五对飞机不带
+}
+
+// 返回代码
+enum ERROR_CODE {
+    SUCCESS = 0;//成功
+
+    NO_TURN_TO_REQUEST = 1;//未轮到请求
+
+    PLAY_TYPE_ERROR = 2;//出牌类型错误
+    COMPARE_LOSE = 3;//比值比输了
+    NO_PLAY = 4;//不要
+
+    CAN_NOT_CALL_LANDLORD = 5;//无法叫地主
+    NO_ONE_CALL_LANDLORD = 6;//无人叫地主
+    NOT_SELECTED_LANDLORD = 7;//未选出地主
+    SELECTED_LANDLORD = 8;//选出地主
+
+    LANDLORD_WIN = 9;//地主赢
+    PEASANT_WIN = 10;//农名赢
+    CAN_NOT_NO_PLAY = 11;//无法不出牌
+
+    PLAYER_OUT_GAME = 12;//玩家中途退出游戏
+
+    SERVER_ERROR = 13;
+}
+
+// 请求地主类型，叫地主或者抢地主
+enum RequestLandlordType {
+    RUSH = 0;
+    CALL = 1;
+}
+
+// 发牌给客户端的类型
+enum DispatchPokerType {
+    DEAL_POKER = 0;//分牌
+    LANDLORD_POKER = 1;//地主牌
+    CURRENT_POKER = 2;//当前牌
+    PLAYER_POKER = 3;//出牌
+}
+
+// 扑克
+message Poker {
+    required uint32  number = 1;//牌面数
+    required int32   value = 2;//比较值
+    required POKER_SUIT suit = 3;//花色
+}
+
+// 出牌请求
+message PlayReq {
+    required uint32 roomId = 1;//房间id
+    required bytes account = 2;//请求账号
+    required PLAY_TYPE type = 3;//牌型
+    repeated Poker pokers = 4;//打的牌	
+}
+
+// 出牌响应
+message PlayResp {
+    required ERROR_CODE playResult = 1;// 响应类型
+    optional bytes desc = 2;// 响应消息
+    optional bytes account = 3;// 当前请求玩家
+    optional bytes next = 4;// 下一个请求账号
+    optional uint32 nextPosition = 5;// 下一个请求玩家座位
+    optional uint32 currentPosition = 6;// 当前请求玩家座位
+    optional uint32 number = 7;// 当前玩家剩余牌数
+}
+
+// 请求地主
+message RequestLandlordReq {
+    required uint32 roomId = 1;//房间id
+    required bytes account = 2;//叫地主用户
+    required bool call = 3;//是否叫地主
+    optional RequestLandlordType type = 4;//请求类型
+}
+
+// 请求地主响应
+message RequestLandlordResp {
+    required ERROR_CODE callLandlordResult = 1;// 响应类型
+    optional bytes desc = 2;// 响应消息
+    optional bytes account = 3;// 当前请求地主玩家
+    optional uint32 currentPosition = 4;// 当前请求地主玩家座位
+    optional bool call = 5;// 是否请求地主
+    optional RequestLandlordType type = 6;// 本次请求类型
+    optional RequestLandlordType nextType = 7;// 下一次请求类型
+    optional bytes next = 8;// 下一个请求账号
+    optional uint32 nextPosition = 9;// 下一个请求地主玩家座位
+}
+
+// 分发扑克
+message DispatchPoker {
+    repeated Poker pockers = 1;// 扑克
+    required DispatchPokerType type = 2;// 类型
+    optional bytes landlordAccount = 3;// 地主玩家或者是出牌玩家
+    optional uint32 position = 4;// 出牌玩家位置
+}
+
+// 玩家退出游戏响应
+message PlayerOut {
+    required ERROR_CODE errorResult = 1;//响应类型
+    optional bytes desc = 2;//响应消息
+    optional bytes account = 3;//退出玩家
+}

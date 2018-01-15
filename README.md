@@ -1,2 +1,2 @@
-# DDZServer
-斗地主服务端
+# GameServer
+游戏通用服务端框架

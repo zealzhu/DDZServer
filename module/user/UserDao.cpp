@@ -1,223 +1,165 @@
-﻿#include "UserDao.h"
-#include "../../basic/GameLog.h"
-#include "../../basic/basic.h"
-#include "../../db/ConnectionPool.h"
-#include "msg/player.pb.h"
+﻿/**
+ * @file UserDao.cpp
+ * @brief 用户数据帮助类
+ * @author zhu peng cheng
+ * @version 1.0
+ * @date 2018-01-15
+ */
+#include "UserDao.h"
+#include <module/Exception.h>
+#include <db/DBHelp.h>
+#include <tools/StringUtils.h>
+#include <tools/GameLog.h>
 
-//mysql driver
-#include <mysql_connection.h>
-//mysql execute
-#include <cppconn/statement.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
-#include <exception>
+using namespace GameDB;
+using namespace StringUtils;
 
-bool zhu::CUserDao::IsExist(int iId)
+namespace GameModule
 {
-	sql::SQLString strSql("select account from t_player where id=?");
 
-	//获得一个连接
-	std::shared_ptr<Connection> pCon = CConnectionPool::Instance().GetConnect();
-	try
-	{
-		std::shared_ptr<PreparedStatement> pStmt(pCon->prepareStatement(strSql));
-		pStmt->setInt(1, iId);
-		std::shared_ptr<ResultSet> pResult(pStmt->executeQuery());
-		CConnectionPool::Instance().ReturnConnect(pCon);
-		if (pResult->next()) {
-			logger_debug("query result: account {} id: {}", pResult->getString("account").asStdString(), iId);
-			return true;
-		}
-	}
-	catch (sql::SQLException& e)
-	{
-		CConnectionPool::Instance().HandleException(pCon, e);
-	}
-	
-	return false;
+bool UserDao::IsExist(int id)
+{
+    RecordData param;
+    QueryData query_data;
+    param["id"] = std::make_pair<DBType, std::string>(DBType::kDBInt, IntToString(id));
+    query_data = DBHelp::Instance().QueryRecord("t_player", "account", param);
+    if (query_data.size() > 0) {
+        logger_debug("查询结果: account {} id: {}", query_data[0]["account"], id);
+        return true;
+    }
+
+    return false;
 }
 
-bool zhu::CUserDao::IsExist(const char * strAccount)
+bool UserDao::IsExist(const char * account)
 {
-	sql::SQLString strSql("select id from t_player where account=?");
+    RecordData param;
+    QueryData query_data;
+    param["account"] = std::make_pair<DBType, std::string>(DBType::kDBStr, account);
+    query_data = DBHelp::Instance().QueryRecord("t_player", "id", param);
+    if (query_data.size() > 0) {
+        logger_debug("查询结果: account {} id: {}", account, query_data[0]["id"]);
+        return true;
+    }
 
-	//获得一个连接
-	std::shared_ptr<Connection> pCon = CConnectionPool::Instance().GetConnect();
-	try
-	{
-		std::shared_ptr<PreparedStatement> pStmt(pCon->prepareStatement(strSql));
-		pStmt->setString(1, strAccount);
-		std::shared_ptr<ResultSet> pResult(pStmt->executeQuery());
-		CConnectionPool::Instance().ReturnConnect(pCon);
-		if (pResult->next()) {
-			logger_debug("query result: account {} id {}", strAccount, pResult->getInt("id"));
-			return true;
-		}
-	}
-	catch (sql::SQLException& e)
-	{
-		CConnectionPool::Instance().HandleException(pCon, e);
-	}
-	
-	return false;
+    return false;
 }
 
-zhu::PLAYER_PTR zhu::CUserDao::GetPlayer(const char * strAccount, const char * strPassword)
+PlayerPtr UserDao::GetPlayer(const char * account, const char * password)
 {
-	sql::SQLString strSql("select * from t_player where account=? and password=?");
+    RecordData param;
+    QueryData query_data;
+    PlayerPtr player_ptr;
 
-	PLAYER_PTR pPlayer(new zhu::user::Player());
-	//获得一个连接
-	std::shared_ptr<Connection> pCon = CConnectionPool::Instance().GetConnect();
-	try
-	{
-		std::shared_ptr<PreparedStatement> pStmt(pCon->prepareStatement(strSql));
-		int i = 1;
-		pStmt->setString(i++, SQLString(strAccount));
-		pStmt->setString(i++, SQLString(strPassword));
-		std::shared_ptr<ResultSet> pResult(pStmt->executeQuery());
-		CConnectionPool::Instance().ReturnConnect(pCon);
-		if (pResult->next()) {
-			pPlayer->set_id(pResult->getInt("id"));
-			pPlayer->set_account(pResult->getString("account").c_str());
-			pPlayer->set_password(pResult->getString("password").c_str());
-			pPlayer->set_name(pResult->getString("name").c_str());
-			zhu::user::Player_SexType sex =
-				pResult->getString("sex").c_str() == "MALE" ? zhu::user::Player_SexType_MALE : zhu::user::Player_SexType_FEMALE;
-			pPlayer->set_sex(sex);
-			pPlayer->set_email(pResult->getString("email").c_str());
-			sql::SQLString strMobile = pResult->getString("mobile").c_str();
-			if (strMobile->length() > 0)
-			{
-				::zhu::user::Player_PhoneNumber* phones = pPlayer->add_phones();
-				phones->set_type(::zhu::user::Player_PhoneType_MOBILE);
-				phones->set_number(strMobile.c_str());
-			}
-			sql::SQLString strPhone(pResult->getString("phone").c_str());
-			if (strPhone->length() > 0)
-			{
-				::zhu::user::Player_PhoneNumber* phones = pPlayer->add_phones();
-				phones->set_type(::zhu::user::Player_PhoneType_HOME);
-				phones->set_number(strPhone.c_str());
-			}
-			pPlayer->set_money(pResult->getInt("money"));
-			zhu::user::UserStatus status = StatusFromString(pResult->getString("status").c_str());
-			pPlayer->set_status(status);
-			pPlayer->set_desc(pResult->getString("desc").c_str());
-		}
-	}
-	catch (sql::SQLException& e)
-	{
-		CConnectionPool::Instance().HandleException(pCon, e);
-	}
-	
-	return pPlayer;
+    param["account"] = std::make_pair<DBType, std::string>(DBType::kDBStr, account);
+    param["password"] = std::make_pair<DBType, std::string>(DBType::kDBStr, password);
+    query_data = DBHelp::Instance().QueryRecord("t_player", "*", param);
+    if (query_data.size() > 0) {
+        auto row = query_data[0];
+        player_ptr->set_id(atoi(row["id"].c_str()));
+        player_ptr->set_account(row["account"].c_str());
+        player_ptr->set_password(row["password"].c_str());
+        player_ptr->set_name(row["name"].c_str());
+        zhu::user::Player_SexType sex =
+            row["sex"] == "MALE" ? zhu::user::Player_SexType_MALE : zhu::user::Player_SexType_FEMALE;
+        player_ptr->set_sex(sex);
+        player_ptr->set_email(row["email"].c_str());
+        std::string mobile = row["mobile"];
+        if (mobile.size() > 0)
+        {
+            zhu::user::Player_PhoneNumber* phones = player_ptr->add_phones();
+            phones->set_type(::zhu::user::Player_PhoneType_MOBILE);
+            phones->set_number(mobile.c_str());
+        }
+        sql::SQLString strPhone(row["phone"]);
+        if (strPhone->length() > 0)
+        {
+            zhu::user::Player_PhoneNumber* phones = player_ptr->add_phones();
+            phones->set_type(::zhu::user::Player_PhoneType_HOME);
+            phones->set_number(strPhone.c_str());
+        }
+        player_ptr->set_money(atoi(row["money"].c_str()));
+        zhu::user::UserStatus status = StatusFromString(row["status"].c_str());
+        player_ptr->set_status(status);
+        player_ptr->set_desc(row["desc"].c_str());
+    }
+
+    return player_ptr;
 }
 
-bool zhu::CUserDao::AddNewAccount(PLAYER_PTR pRegisterReq)
+bool UserDao::AddNewAccount(PlayerPtr register_req)
 {
-	sql::SQLString strSql("insert into t_player(account, password, name, email) values(?,?,?,?)");
+    RecordData param;
+    param["account"] = std::make_pair<DBType, std::string>(DBType::kDBStr, register_req->account().c_str());
+    param["password"] = std::make_pair<DBType, std::string>(DBType::kDBStr, register_req->password().c_str());
+    param["name"] = std::make_pair<DBType, std::string>(DBType::kDBStr, register_req->name().c_str());
+    param["email"] = std::make_pair<DBType, std::string>(DBType::kDBStr, register_req->email().c_str());
+    int result = DBHelp::Instance().InsertRecord("t_player", param);
 
-	//获得一个连接
-	std::shared_ptr<Connection> pCon = CConnectionPool::Instance().GetConnect();
-	try
-	{
-		std::shared_ptr<PreparedStatement> pStmt(pCon->prepareStatement(strSql));
-		int i = 1;
-		pStmt->setString(i++, SQLString(pRegisterReq->account().c_str()));
-		pStmt->setString(i++, SQLString(pRegisterReq->password().c_str()));
-		pStmt->setString(i++, SQLString(pRegisterReq->name().c_str()));
-		pStmt->setString(i++, SQLString(pRegisterReq->email().c_str()));
-
-		int iResult = pStmt->executeUpdate();
-		CConnectionPool::Instance().ReturnConnect(pCon);
-		if (iResult > 0) {
-			return true;
-		}
-	}
-	catch (sql::SQLException& e)
-	{
-		CConnectionPool::Instance().HandleException(pCon, e);
-	}
-	
-	return false;
+    return result > 0 ? true : false;
 }
 
-bool zhu::CUserDao::ChangeAccountStatus(const char * strAccount, zhu::user::UserStatus status)
+bool UserDao::ChangeAccountStatus(const char * account, zhu::user::UserStatus status)
 {
-	sql::SQLString strSql("update t_player set status=? where account=?");
+   /* sql::SQLString strSql("update t_player set status=? where account=?");*/
+    RecordData set_map;
+    set_map["status"] = std::make_pair<DBType, std::string>(DBType::kDBStr, StatusToString(status));
 
-	//获得一个连接
-	std::shared_ptr<Connection> pCon = CConnectionPool::Instance().GetConnect();
-	try
-	{
-		std::shared_ptr<PreparedStatement> pStmt(pCon->prepareStatement(strSql));
-		int i = 1;
-		std::string strStatus = StatusToString(status);
-		pStmt->setString(i++, SQLString(strStatus.c_str()));
-		pStmt->setString(i++, strAccount);
+    RecordData where_map;
+    where_map["account"] = std::make_pair<DBType, std::string>(DBType::kDBStr, account);
 
-		int iResult = pStmt->executeUpdate();
-		CConnectionPool::Instance().ReturnConnect(pCon);
-		if (iResult > 0) {
-			return true;
-		}
-	}
-	catch (sql::SQLException& e)
-	{
-		CConnectionPool::Instance().HandleException(pCon, e);
-	}
-	
-	return false;
+    int result = DBHelp::Instance().UpdateRecord("t_player", set_map, where_map);
+    return result > 0 ? true : false;
 }
 
-std::string zhu::CUserDao::StatusToString(zhu::user::UserStatus status)
+std::string UserDao::StatusToString(zhu::user::UserStatus status)
 {
-	const static std::map< zhu::user::UserStatus, std::string > mapStatus =
-	{ { zhu::user::UserStatus::OFFLINE, "OFFLINE"},
-	  { zhu::user::UserStatus::ONLINE, "ONLINE"},
-	  { zhu::user::UserStatus::FORBIDDEN, "FORBIDDEN"} };
-	std::map< zhu::user::UserStatus, std::string >::const_iterator it = mapStatus.find(status);
-	if (mapStatus.end() != it)
-	{
-		return it->second;
-	}
-	logger_error("player status {} to string failed", status);
-	return "STATUS NOT FOUND";
+    const static std::map< zhu::user::UserStatus, std::string > status_map =
+    { { zhu::user::UserStatus::OFFLINE, "OFFLINE"},
+      { zhu::user::UserStatus::ONLINE, "ONLINE"},
+      { zhu::user::UserStatus::FORBIDDEN, "FORBIDDEN"} };
+    std::map< zhu::user::UserStatus, std::string >::const_iterator it = status_map.find(status);
+    if (status_map.end() != it)
+    {
+        return it->second;
+    }
+    logger_error("用户状态 {} 转换为 string 失败", status);
+    return "STATUS NOT FOUND";
 }
 
-zhu::user::UserStatus zhu::CUserDao::StatusFromString(std::string strStatus)
+zhu::user::UserStatus UserDao::StatusFromString(std::string status)
 {
-	if (strStatus == "OFFLINE")
-	{
-		return zhu::user::UserStatus::OFFLINE;
-	} 
-	else if (strStatus == "ONLINE")
-	{
-		return zhu::user::UserStatus::ONLINE;
-	}
-	else if (strStatus == "FORBIDDEN")
-	{
-		return zhu::user::UserStatus::FORBIDDEN;
-	}
-	else
-	{
-		logger_error("unsupport user status {}", strStatus);
-		throw zhu::Exception("unsupport user status " + strStatus);
-	}
+    if (status == "OFFLINE")
+    {
+        return zhu::user::UserStatus::OFFLINE;
+    }
+    else if (status == "ONLINE")
+    {
+        return zhu::user::UserStatus::ONLINE;
+    }
+    else if (status == "FORBIDDEN")
+    {
+        return zhu::user::UserStatus::FORBIDDEN;
+    }
+    else
+    {
+        logger_error("无法转换用户状态 {}", status);
+        throw Exception("无法转换用户状态 status " + status);
+    }
 }
 
-std::string zhu::CUserDao::SexToString(zhu::user::Player_SexType sex)
+std::string UserDao::SexToString(zhu::user::Player_SexType sex)
 {
-	const static std::map< zhu::user::Player_SexType, std::string > mapSex =
-	{ { zhu::user::Player_SexType_MALE, "MALE" },
-	{ zhu::user::Player_SexType_FEMALE, "FEMALE" } };
-	std::map< zhu::user::Player_SexType, std::string >::const_iterator it = mapSex.find(sex);
-	if (mapSex.end() != it)
-	{
-		return it->second;
-	}
-	logger_error("sex {} to string failed", sex);
-	return "SEX NOT FOUND";
+    const static std::map< zhu::user::Player_SexType, std::string > sex_map =
+    { { zhu::user::Player_SexType_MALE, "MALE" },
+    { zhu::user::Player_SexType_FEMALE, "FEMALE" } };
+    std::map< zhu::user::Player_SexType, std::string >::const_iterator it = sex_map.find(sex);
+    if (sex_map.end() != it)
+    {
+        return it->second;
+    }
+    logger_error("性别 {} 转换为 string 失败", sex);
+    return "SEX NOT FOUND";
 }
 
+}

@@ -1,115 +1,111 @@
-﻿////////////////////////////////////////////////////////////////////////
-// Copyright(c) 1999-2099, TQ Digital Entertainment, All Rights Reserved
-// Author：  zhou du
-// Created： 2017/07/10
-// Describe：用户管理类
-////////////////////////////////////////////////////////////////////////
-
-#ifndef CUSERMGR_H
-#define CUSERMGR_H
+﻿/**
+ * @file UserMgr.h
+ * @brief 用户模块
+ * @author zhu peng cheng
+ * @version 1.0
+ * @date 2018-01-10
+ */
+#ifndef _USER_MGR_H
+#define _USER_MGR_H
 
 // ========================================================================
 //  Include Files
 // ========================================================================
-#include "../IModule.h"
-#include "../../message/BaseMsg.pb.h"
-#include "../../protocol/Protobuf.h"
-#include "../../socket/ConnectionManager.h"
-#include "../../socket/SocketLibTypes.h"
+#include <module/ModuleInterface.h>
 #include "UserDao.h"
-#include "msg/player.pb.h"
-#include "../room/RoomMgr.h"
+
+#include <list>
 
 using namespace std;
 
-namespace zhu
+namespace GameModule
 {
-	class IUserStatusChangeEvent
-	{
-	public:
+class UserStatusChangeEvent
+{
+public:
 
-		virtual void UserOnline(const string& strAccount) = 0;
+    virtual void UserOnline(const string& account) = 0;
 
-		virtual void UserOffline(const string& strAccount) = 0;
+    virtual void UserOffline(const string& account) = 0;
 
-	};
+};
 
-    class CUserMgr : public IModule, public SocketLib::IConnectionEvent
+class UserMgr : public ModuleInterface
+{
+    // UID <-> PLAYER
+    typedef std::map< int, PlayerPtr > PlayerMap;
+    typedef PlayerMap::iterator PlayerIter;
+
+    typedef std::shared_ptr< UserStatusChangeEvent > UserStatusListenner;
+    typedef std::list< UserStatusListenner > UserStatusListennerList;
+    typedef typename UserStatusListennerList::iterator UserStatusListennerIter;
+
+public:
+    UserMgr();
+
+    ~UserMgr();
+
+    virtual bool Init() override
     {
-		// UID <-> PLAYER
-		typedef std::map<int, PLAYER_PTR > PLAYER_MAP;
-		typedef std::map<int, PLAYER_PTR >::iterator PLAYER_ITER;
-
-		typedef std::list< std::shared_ptr<IUserStatusChangeEvent> > USER_STATUS_LISTENNER_LIST;
-		typedef typename std::list< std::shared_ptr<IUserStatusChangeEvent> >::iterator USER_STATUS_LISTENNER_LIST_ITR;
-
-    public:
-		CUserMgr()
-		{
-			
-		}
-
-		virtual bool Init() override
-		{
-			return true;
-		}
+        return true;
+    }
 
 
-		virtual bool Start() override
-		{
-			return true;
-		}
+    virtual bool Start() override
+    {
+        return true;
+    }
 
 
-		virtual bool Stop() override
-		{
-			return true;
-		}
+    virtual bool Stop() override
+    {
+        return true;
+    }
 
 
-		virtual bool Reload() override
-		{
-			return true;
-		}
+    virtual bool Reload() override
+    {
+        return true;
+    }
 
 
-		virtual void HandleMsg(std::shared_ptr<SelfDescribingMessage> pMsg) override;
+    virtual void HandleMessage(MessagePtr msg) override;
 
-		virtual string GetModuleName() override
-		{
-			return "zhu.user";
-		}
+    virtual string GetModuleName() override
+    {
+        return "zhu.user";
+    }
 
-		virtual void ConnectionClosed(SocketLib::DataSocket sock) override;
+    //virtual void ConnectionClosed(SocketLib::DataSocket sock) override;
 
-		// ------------------------------------------------------------------------
-		// Description: This add listener to m_listenners.
-		// ------------------------------------------------------------------------
-		void AddListener(std::shared_ptr<IUserStatusChangeEvent> pListenner)
-		{
-			m_listenerList.push_back(pListenner);
-		}
+    // ------------------------------------------------------------------------
+    // Description: This add listener to m_listenners.
+    // ------------------------------------------------------------------------
+    void AddListener(UserStatusListenner listenner)
+    {
+        this->listener_list_.push_back(listenner);
+    }
 
-		// ------------------------------------------------------------------------
-		// Description: notify all listenners user status.
-		// ------------------------------------------------------------------------
-		void NotifyUserListenners(const string& strAccount, bool bOnline);
+    // ------------------------------------------------------------------------
+    // Description: notify all listenners user status.
+    // ------------------------------------------------------------------------
+    void NotifyUserListenners(const string& account, bool online);
 
-	private:
-		void Login(int iSocket, LOGIN_PTR pLoginReq);
+private:
+    //void Login(int socket, LOGIN_PTR pLoginReq);
 
-		bool ValidateLoginReq(LOGIN_PTR pLoginReq, zhu::user::LoginResp& errorMessage);
-		
-		void Register(int iSocket, PLAYER_PTR pRegisterReq);
-		
-		bool ValidateRegisterReq(PLAYER_PTR pRegisterReq, ErrorMessage& errorMessage);
+    //bool ValidateLoginReq(LOGIN_PTR pLoginReq, zhu::user::LoginResp& errorMessage);
 
-		void Logout(int iSocket, LOGOUT_PTR pLogoutReq);
+    //void Register(int iSocket, PLAYER_PTR pRegisterReq);
 
-		PLAYER_MAP m_mapPlayers;//用户列表
+    //bool ValidateRegisterReq(PLAYER_PTR pRegisterReq, ErrorMessage& errorMessage);
 
-		USER_STATUS_LISTENNER_LIST m_listenerList;
-	};
+    //void Logout(int iSocket, LOGOUT_PTR pLogoutReq);
+
+    PlayerMap player_map_;//用户列表
+
+    UserStatusListennerList listener_list_;
+};
 
 } // end namespace BasicLib
 
