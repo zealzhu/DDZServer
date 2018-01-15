@@ -12,6 +12,7 @@
 //  Include Files
 // ========================================================================
 #include <module/ModuleInterface.h>
+#include <BaseMsg.pb.h>
 #include "UserDao.h"
 
 #include <list>
@@ -69,8 +70,13 @@ public:
     }
 
 
-    virtual void HandleMessage(MessagePtr msg) override;
+    virtual void HandleMessage(std::shared_ptr<zhu::SelfDescribingMessage> msg) override;
 
+    /**
+     * @brief 模块名，对应消息定义中的package
+     *
+     * @return
+     */
     virtual string GetModuleName() override
     {
         return "zhu.user";
@@ -89,18 +95,18 @@ public:
     // ------------------------------------------------------------------------
     // Description: notify all listenners user status.
     // ------------------------------------------------------------------------
-    void NotifyUserListenners(const string& account, bool online);
+    void NotifyUserListenners(const string & account, bool online);
 
 private:
-    //void Login(int socket, LOGIN_PTR pLoginReq);
+    void Login(int socket, LoginRequestPtr login_req);
 
-    //bool ValidateLoginReq(LOGIN_PTR pLoginReq, zhu::user::LoginResp& errorMessage);
+    bool ValidateLoginReq(LoginRequestPtr login_req, zhu::user::LoginResp & login_resp);
 
-    //void Register(int iSocket, PLAYER_PTR pRegisterReq);
+    void Register(int socket, PlayerPtr register_req);
 
-    //bool ValidateRegisterReq(PLAYER_PTR pRegisterReq, ErrorMessage& errorMessage);
+    bool ValidateRegisterReq(PlayerPtr register_req, zhu::ErrorMessage & error_message);
 
-    //void Logout(int iSocket, LOGOUT_PTR pLogoutReq);
+    void Logout(int socket, LogoutRequestPtr logout_req);
 
     PlayerMap player_map_;//用户列表
 
