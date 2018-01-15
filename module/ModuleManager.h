@@ -74,9 +74,9 @@ public:
     }
 
     /**
-     * @brief
+     * @brief 根据消息类型名切割出模块名
      *
-     * @param type_name
+     * @param type_name 类型名
      *
      * @return
      */
