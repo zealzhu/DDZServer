@@ -12,7 +12,6 @@
 
 namespace GameModule
 {
-typedef std::shared_ptr<google::protobuf::Message> MessagePtr;
 
 class ModuleInterface
 {
@@ -22,7 +21,7 @@ public:
     virtual bool Stop() = 0;
     virtual bool Reload() = 0;
 
-    virtual void HandleMessage(MessagePtr message) = 0;
+    virtual void HandleMessage(std::shared_ptr<zhu::SelfDescribingMessage> message) = 0;
 
     virtual std::string GetModuleName() = 0;
 
